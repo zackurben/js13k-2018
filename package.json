@@ -13,6 +13,7 @@
     "clean-webpack-plugin": "^0.1.19",
     "html-webpack-plugin": "^3.2.0",
     "jest": "^22.4.3",
+    "localtunnel": "^1.9.0",
     "prettier": "^1.12.1",
     "webpack": "^4.8.3",
     "webpack-cli": "^2.1.3",
@@ -22,8 +23,9 @@
     "lint": "prettier src/**/*.js --single-quote --write",
     "test": "jest",
     "watch": "webpack --progress --watch",
-    "start": "webpack-dev-server --config webpack.config.js --open",
-    "build": "webpack"
+    "start": "webpack-dev-server --config webpack.config.js --public https://js13k.localtunnel.me --port 9891 --open",
+    "build": "webpack",
+    "mobile": "lt --port 9891 --subdomain js13k"
   },
   "author": "Zack Urben <zackurben@gmail.com> (http://zackurben.com)",
   "license": "MIT",

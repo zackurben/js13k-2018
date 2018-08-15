@@ -13,7 +13,8 @@ module.exports = {
   devtool: 'inline-source-map',
   devServer: {
     contentBase: path.resolve(__dirname, 'dist'),
-    historyApiFallback: true
+    historyApiFallback: true,
+    disableHostCheck: true
   },
   plugins: [
     new clean(['dist']),
