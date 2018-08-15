@@ -1,13 +1,23 @@
-# Webpack Template
+# JS13k - 2018
 
-This is my simple template for creating new webpack based projects. The purpose of this repo is to provide a quick,
-cloneable, starting point for new projects.
+This is the initial repo for our JS13k project.
 
 This is an open source project under the MIT license, see [LICENSE.md](LICENSE.md) for additional information.
 
 # Usage
 ```bash
-git clone https://github.com/zackurben/webpack-template.git my-project
+git clone https://github.com/zackurben/js13k-2018.git my-project
+```
+
+# Development
+```bash
+# terminal 1
+npm run mobile
+
+# terminal 2
+npm start
+
+# profit ?!
 ```
 
 # Included Scripts
@@ -30,14 +40,19 @@ git clone https://github.com/zackurben/webpack-template.git my-project
 ## start
   `npm start`
 
-  Start the webpack dev server and watch for any file changes. This will open your default browser to `http://localhost:8080/`
+  Start the webpack dev server and watch for any file changes. This will open your default browser to `https://js13k.localtunnel.me/`
 
 ## build
   `npm run build`
 
   Build the production dist files for the js bundle.
 
+## mobile
+  `npm run mobile`
+
+  Start localtunnel for development
+
 # Contact
-  - Author: Zack Urben
-  - Twitter: https://twitter.com/zackurben (better)
-  - Contact: zackurben@gmail.com
+  - Zack Urben
+    - Twitter: https://twitter.com/zackurben (better)
+    - Contact: zackurben@gmail.com
