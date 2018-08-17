@@ -3,9 +3,7 @@
   "version": "0.0.1",
   "description": "Webpack template",
   "main": "index.js",
-  "dependencies": {
-    "url-parse": "^1.4.3"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
