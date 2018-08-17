@@ -1,6 +1,7 @@
 'use strict';
 
 import Player from './Player';
+import Wall from './Wall';
 
 /**
  * Get a new canvas context for rendering.
@@ -20,7 +21,9 @@ const ctx = {
 };
 
 // The list of entities in the game.
-let entities = [new Player()];
+let entities = [new Player()].concat(
+  [[0, 0, 100, 0], [100, 0, 100, 100]].map(item => new Wall(item))
+);
 
 // Run the game.
 window.requestAnimationFrame(delta => {
