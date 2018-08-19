@@ -14,12 +14,19 @@ export default class Player {
     canvas.fillRect(this.x, this.y, this.width, this.height);
   }
 
-  update(delta) {
+  update(delta, ctx) {
+    // keep the player within the bounds of the map.
     if (this.x < 0) {
       this.x = 0;
     }
     if (this.y < 0) {
       this.y = 0;
+    }
+    if (this.x >= ctx.Config.width) {
+      this.x = ctx.Config.width - this.width;
+    }
+    if (this.y >= ctx.Config.height) {
+      this.y = ctx.Config.height - this.height;
     }
   }
 }

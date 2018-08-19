@@ -6,7 +6,7 @@ export default class Wall {
     this.y1 = y1;
     this.x2 = x2;
     this.y2 = y2;
-    this.width = 10;
+    this.width = width;
     this.color = color;
   }
 
@@ -20,4 +20,13 @@ export default class Wall {
   }
 
   update(delta) {}
+
+  bounds() {
+    let bounds = {
+      top: this.y1 + (this.width / 2),
+      right: this.x2,
+      bottom: this.y2 - (this.width / 2),
+      left: this.x1,
+    };
+  }
 }

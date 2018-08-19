@@ -19,18 +19,24 @@ const getCanvas = () => {
   return html.getContext('2d');
 };
 
+let walls = [
+  [0, 0, 100, 0],
+  [100, 0, 100, 100],
+  [100, 150, 200, 150, 10],
+  [100, 200, 200, 200, 1]
+].map(item => new Wall(item))
+
 // The game context.
 const ctx = {
   canvas: getCanvas(),
   player: new Player(),
   input: new TestImport(),
-  Config
+  Config,
+  walls
 };
 
 // The list of entities in the game.
-let entities = [ctx.player, ctx.input].concat(
-  [[0, 0, 100, 0], [100, 0, 100, 100]].map(item => new Wall(item))
-);
+let entities = [ctx.player, ctx.input].concat(walls);
 
 // Run the game.
 let update = delta => {
