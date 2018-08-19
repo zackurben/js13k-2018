@@ -6,63 +6,63 @@ const keyboardInputState = {
   s: false,
   a: false,
   d: false
+};
+
+export default function getKeyboardInputState() {
+  return keyboardInputState;
 }
 
-export default function getKeyboardInputState () {
-  return keyboardInputState
-}
-
-function _handleKeyDown (keyDownEvent) {
-  const key = keyDownEvent.key
+function _handleKeyDown(keyDownEvent) {
+  const key = keyDownEvent.key;
 
   switch (key) {
     case 'w': {
-      keyboardInputState.w = true
-      break
+      keyboardInputState.w = true;
+      break;
     }
 
     case 's': {
-      keyboardInputState.s = true
-      break
+      keyboardInputState.s = true;
+      break;
     }
 
     case 'a': {
-      keyboardInputState.a = true
-      break
+      keyboardInputState.a = true;
+      break;
     }
 
     case 'd': {
-      keyboardInputState.d = true
-      break
+      keyboardInputState.d = true;
+      break;
     }
   }
 }
 
-function _handleKeyUp (keyUpEvent) {
-  const key = keyUpEvent.key
+function _handleKeyUp(keyUpEvent) {
+  const key = keyUpEvent.key;
 
   switch (key) {
     case 'w': {
-      keyboardInputState.w = false
-      break
+      keyboardInputState.w = false;
+      break;
     }
 
     case 's': {
-      keyboardInputState.s = false
-      break
+      keyboardInputState.s = false;
+      break;
     }
 
     case 'a': {
-      keyboardInputState.a = false
-      break
+      keyboardInputState.a = false;
+      break;
     }
 
     case 'd': {
-      keyboardInputState.d = false
-      break
+      keyboardInputState.d = false;
+      break;
     }
   }
 }
 
-window.addEventListener('keydown', _handleKeyDown)
-window.addEventListener('keyup', _handleKeyUp)
+window.addEventListener('keydown', _handleKeyDown);
+window.addEventListener('keyup', _handleKeyUp);
