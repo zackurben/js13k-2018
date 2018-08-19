@@ -57,7 +57,6 @@ export default class TestInput {
   update(delta, ctx) {
     if (this.direction.up) {
       ctx.player.y -= ctx.player.speed * (delta / 1000);
-      console.log(ctx.player.y);
     }
     if (this.direction.right) {
       ctx.player.x += ctx.player.speed * (delta / 1000);

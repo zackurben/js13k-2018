@@ -1,5 +1,6 @@
 'use strict';
 
+import Config from './Config';
 import Player from './Player';
 import Wall from './Wall';
 import TestImport from './TestInput';
@@ -12,6 +13,8 @@ import TestImport from './TestInput';
  */
 const getCanvas = () => {
   const html = document.createElement('canvas');
+  html.height = Config.height;
+  html.width = Config.width;
   document.body.appendChild(html);
   return html.getContext('2d');
 };
@@ -20,7 +23,8 @@ const getCanvas = () => {
 const ctx = {
   canvas: getCanvas(),
   player: new Player(),
-  input: new TestImport()
+  input: new TestImport(),
+  Config
 };
 
 // The list of entities in the game.
@@ -30,7 +34,7 @@ let entities = [ctx.player, ctx.input].concat(
 
 // Run the game.
 let update = delta => {
-  ctx.canvas.clearRect(0, 0, 1000, 1000);
+  ctx.canvas.clearRect(0, 0, Config.width, Config.height);
   entities.forEach(entity => {
     // Physics calculations.
     entity.update(delta, ctx);
