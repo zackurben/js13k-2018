@@ -9,6 +9,7 @@
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.7.0",
     "clean-webpack-plugin": "^0.1.19",
+    "concurrently": "^3.6.1",
     "css-loader": "^1.0.0",
     "html-webpack-plugin": "^3.2.0",
     "jest": "^22.4.3",
@@ -20,10 +21,11 @@
     "webpack-dev-server": "^3.1.4"
   },
   "scripts": {
+    "dev-server": "webpack-dev-server --config webpack.config.js --public https://js13k.localtunnel.me --port 9891 --open",
     "lint": "prettier src/**/*.js --single-quote --write",
     "test": "jest",
     "watch": "webpack --progress --watch",
-    "start": "webpack-dev-server --config webpack.config.js --public https://js13k.localtunnel.me --port 9891 --open",
+    "start": "concurrently --kill-others --names 'localtunnel,webpack dev-server' --prefix-colors 'magenta,cyan' 'npm run mobile' 'npm run dev-server'",
     "build": "webpack",
     "mobile": "lt --port 9891 --subdomain js13k"
   },
