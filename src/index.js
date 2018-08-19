@@ -2,6 +2,7 @@
 
 import Player from './Player';
 import Wall from './Wall';
+import TestImport from './TestInput';
 
 /**
  * Get a new canvas context for rendering.
@@ -17,23 +18,29 @@ const getCanvas = () => {
 
 // The game context.
 const ctx = {
-  canvas: getCanvas()
+  canvas: getCanvas(),
+  player: new Player(),
+  input: new TestImport()
 };
 
 // The list of entities in the game.
-let entities = [new Player()].concat(
+let entities = [ctx.player, ctx.input].concat(
   [[0, 0, 100, 0], [100, 0, 100, 100]].map(item => new Wall(item))
 );
 
 // Run the game.
-window.requestAnimationFrame(delta => {
+let update = delta => {
+  ctx.canvas.clearRect(0, 0, 1000, 1000);
   entities.forEach(entity => {
     // Physics calculations.
-    entity.update(delta);
+    entity.update(delta, ctx);
 
     // GFX drawing
     ctx.canvas.save();
     entity.render(ctx);
     ctx.canvas.restore();
   });
-});
+
+  window.requestAnimationFrame(update);
+};
+update();

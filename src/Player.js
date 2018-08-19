@@ -2,6 +2,7 @@
 
 export default class Player {
   constructor() {
+    this.speed = 1;
     this.x = 10;
     this.y = 10;
     this.height = 10;
@@ -13,5 +14,12 @@ export default class Player {
     canvas.fillRect(this.x, this.y, this.width, this.height);
   }
 
-  update(delta) {}
+  update(delta) {
+    if (this.x < 0) {
+      this.x = 0;
+    }
+    if (this.y < 0) {
+      this.y = 0;
+    }
+  }
 }
