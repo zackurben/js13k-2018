@@ -23,7 +23,9 @@ const ctx = {
 let entities = [new Player()];
 
 // Run the game.
-window.requestAnimationFrame(delta => {
+window.requestAnimationFrame(onFrame);
+
+function onFrame (delta) {
   entities.forEach(entity => {
     // Physics calculations.
     entity.update(delta);
@@ -33,4 +35,6 @@ window.requestAnimationFrame(delta => {
     entity.render(ctx);
     ctx.canvas.restore();
   });
-});
+
+  window.requestAnimationFrame(onFrame)
+}
