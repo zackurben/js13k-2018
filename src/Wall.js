@@ -22,7 +22,7 @@ export default class Wall {
   update(delta) {}
 
   bounds() {
-    let bounds = {
+    return {
       top: this.y1 + this.width / 2,
       right: this.x2,
       bottom: this.y2 - this.width / 2,

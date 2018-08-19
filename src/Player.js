@@ -29,4 +29,42 @@ export default class Player {
       this.y = ctx.Config.height - this.height;
     }
   }
+
+  bounds() {
+    return {
+      top: this.y,
+      right: this.x + this.width,
+      bottom: this.y + this.height,
+      left: this.x
+    };
+  }
+
+  intersects(wall) {
+    let self = this.bounds();
+    let bounds = wall.bounds();
+
+    let intersections = Object.keys(self).map(corner => {
+      let check = self[corner];
+      let intersect = {
+        top: check < bounds.top,
+        right: check < bounds.right,
+        bottom: check > bounds.bottom,
+        left: check > bounds.left
+      };
+
+      if (
+        intersect.top &&
+        intersect.right &&
+        intersect.bottom &&
+        intersect.left
+      ) {
+        return true;
+      }
+
+      return false;
+    });
+
+    // return intersections.reduce((acc, cur) => acc || cur, false);
+    return intersections;
+  }
 }
