@@ -39,7 +39,12 @@ const ctx = {
 let entities = [ctx.player, ctx.input].concat(walls);
 
 // Run the game.
-let update = delta => {
+let start = 0;
+let delta = 0;
+let update = timestamp => {
+  delta = timestamp - start;
+  start = timestamp;
+
   ctx.canvas.clearRect(0, 0, Config.width, Config.height);
   entities.forEach(entity => {
     // Physics calculations.
