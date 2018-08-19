@@ -22,6 +22,11 @@ npm start
 
 # Included Scripts
 
+## dev-server
+  `npm run dev-server`
+
+  Start the webpack dev server and watch for any file changes. This will open your default browser to `https://js13k.localtunnel.me/`.
+
 ## lint
   `npm run lint` 
   
@@ -40,7 +45,7 @@ npm start
 ## start
   `npm start`
 
-  Start the webpack dev server and watch for any file changes. This will open your default browser to `https://js13k.localtunnel.me/`
+  Start localtunnel and start the webpack dev server and watch for any file changes. This will open your default browser to `https://js13k.localtunnel.me/`.
 
 ## build
   `npm run build`
@@ -50,7 +55,7 @@ npm start
 ## mobile
   `npm run mobile`
 
-  Start localtunnel for development
+  Start localtunnel for development.
 
 # Contact
   - Zack Urben
