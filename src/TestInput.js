@@ -56,16 +56,16 @@ export default class TestInput {
 
   update(delta, ctx) {
     if (this.direction.up) {
-      ctx.player.y -= ctx.player.speed * (delta / 1000);
+      ctx.player.y -= ctx.player.speed * delta;
     }
     if (this.direction.right) {
-      ctx.player.x += ctx.player.speed * (delta / 1000);
+      ctx.player.x += ctx.player.speed * delta;
     }
     if (this.direction.down) {
-      ctx.player.y += ctx.player.speed * (delta / 1000);
+      ctx.player.y += ctx.player.speed * delta;
     }
     if (this.direction.left) {
-      ctx.player.x -= ctx.player.speed * (delta / 1000);
+      ctx.player.x -= ctx.player.speed * delta;
     }
   }
 }

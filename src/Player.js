@@ -2,7 +2,7 @@
 
 export default class Player {
   constructor() {
-    this.speed = 100;
+    this.speed = 0.5;
     this.x = 10;
     this.y = 10;
     this.height = 10;
@@ -22,10 +22,10 @@ export default class Player {
     if (this.y < 0) {
       this.y = 0;
     }
-    if (this.x >= ctx.Config.width) {
+    if (this.x + this.width > ctx.Config.width) {
       this.x = ctx.Config.width - this.width;
     }
-    if (this.y >= ctx.Config.height) {
+    if (this.y + this.height > ctx.Config.height) {
       this.y = ctx.Config.height - this.height;
     }
   }

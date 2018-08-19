@@ -23,10 +23,10 @@ export default class Wall {
 
   bounds() {
     let bounds = {
-      top: this.y1 + (this.width / 2),
+      top: this.y1 + this.width / 2,
       right: this.x2,
-      bottom: this.y2 - (this.width / 2),
-      left: this.x1,
+      bottom: this.y2 - this.width / 2,
+      left: this.x1
     };
   }
 }

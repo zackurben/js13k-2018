@@ -24,7 +24,7 @@ let walls = [
   [100, 0, 100, 100],
   [100, 150, 200, 150, 10],
   [100, 200, 200, 200, 1]
-].map(item => new Wall(item))
+].map(item => new Wall(item));
 
 // The game context.
 const ctx = {
