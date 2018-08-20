@@ -22,11 +22,23 @@ export default class Wall {
   update(delta) {}
 
   bounds() {
+    // horizontal wall
+    let horizontal = this.x1 !== this.x2;
+
+    if (horizontal) {
+      return {
+        top: this.y1 - this.width / 2,
+        right: this.x2,
+        bottom: this.y2 + this.width / 2,
+        left: this.x1
+      };
+    }
+
     return {
-      top: this.y1 + this.width / 2,
-      right: this.x2,
-      bottom: this.y2 - this.width / 2,
-      left: this.x1
+      top: this.y1,
+      right: this.x2 + this.width / 2,
+      bottom: this.y2,
+      left: this.x1 - this.width / 2
     };
   }
 }

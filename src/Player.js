@@ -2,7 +2,7 @@
 
 export default class Player {
   constructor() {
-    this.speed = 0.5;
+    this.speed = 0.1;
     this.x = 10;
     this.y = 10;
     this.height = 10;
@@ -28,43 +28,46 @@ export default class Player {
     if (this.y + this.height > ctx.Config.height) {
       this.y = ctx.Config.height - this.height;
     }
+
+    // On each update, check the bounds for each wall.
+    ctx.walls.forEach(wall => {
+      let points = this.intersects(wall);
+      let b = wall.bounds();
+
+      points.forEach(pt => {});
+    });
   }
 
   bounds() {
-    return {
-      top: this.y,
-      right: this.x + this.width,
-      bottom: this.y + this.height,
-      left: this.x
-    };
+    return [
+      // top left
+      { x: this.x, y: this.y },
+
+      // top right
+      { x: this.x + this.width, y: this.y },
+
+      // bottom left
+      { x: this.x, y: this.y + this.height },
+
+      // bottom right
+      { x: this.x + this.width, y: this.y + this.height }
+    ];
   }
 
   intersects(wall) {
     let self = this.bounds();
     let bounds = wall.bounds();
 
-    let intersections = Object.keys(self).map(corner => {
-      let check = self[corner];
-      let intersect = {
-        top: check < bounds.top,
-        right: check < bounds.right,
-        bottom: check > bounds.bottom,
-        left: check > bounds.left
-      };
+    let out = [];
+    self.forEach(pt => {
+      let y = pt.y > bounds.top && pt.y < bounds.bottom;
+      let x = pt.x > bounds.left && pt.x < bounds.right;
 
-      if (
-        intersect.top &&
-        intersect.right &&
-        intersect.bottom &&
-        intersect.left
-      ) {
-        return true;
+      if (x && y) {
+        out.push(pt);
       }
-
-      return false;
     });
 
-    // return intersections.reduce((acc, cur) => acc || cur, false);
-    return intersections;
+    return out;
   }
 }
