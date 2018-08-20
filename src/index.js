@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-import Player from './Player';
+import Player from "./Player";
 
-import getInputState from './input';
+import getInputState from "./input/input";
 
 /**
  * Get a new canvas context for rendering.
@@ -11,9 +11,9 @@ import getInputState from './input';
  *   The canvas context.
  */
 const getCanvas = () => {
-  const html = document.createElement('canvas');
+  const html = document.createElement("canvas");
   document.body.appendChild(html);
-  return html.getContext('2d');
+  return html.getContext("2d");
 };
 
 // The game context.
