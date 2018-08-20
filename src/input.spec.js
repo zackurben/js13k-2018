@@ -1,13 +1,30 @@
-import getInputState from './input';
+import getInputState from "./input";
 
 // The intensity given to a keyboard key press. Can be a minimum of 1 and a maximum of 2.
 const keyboardInputIntensity = 2;
 
-describe('input', () => {
-  describe('#getInputState', () => {
-    it('Returns the proper state when one key is pressed', () => {
+// Minimum amount of axis movement to be considered an "intensity 1" movement.
+const intensity1Threshold = 10;
+
+// Minimum amount of axis movement to be considered an "intensity 2" movement.
+const intensity2Threshold = 20;
+
+describe("input", () => {
+  describe("#getInputState", () => {
+    beforeAll(() => {
+      // "Zeroing out" the gyro.
+      // Using a generic 'Event' because JSDom does not support the DeviceOrientation constructor.
+      const deviceOrientationEvent = new Event("deviceorientation");
+      Object.defineProperties(deviceOrientationEvent, {
+        beta: { value: 0, writable: false },
+        gamma: { value: 0, writable: false }
+      });
+      window.dispatchEvent(deviceOrientationEvent);
+    });
+
+    it("Returns the proper state when one key is pressed", () => {
       // Arrange.
-      const keyDownEvent = new KeyboardEvent('keydown', { key: 'w' });
+      const keyDownEvent = new KeyboardEvent("keydown", { key: "w" });
 
       // Act.
       window.dispatchEvent(keyDownEvent);
@@ -17,10 +34,10 @@ describe('input', () => {
       expect(inputState.upIntensity).toBe(keyboardInputIntensity);
     });
 
-    it('Returns the proper state when one key is pressed, and then released', () => {
+    it("Returns the proper state when one key is pressed, and then released", () => {
       // Arrange.
-      const keyDownEvent = new KeyboardEvent('keydown', { key: 'w' });
-      const keyUpEvent = new KeyboardEvent('keyup', { key: 'w' });
+      const keyDownEvent = new KeyboardEvent("keydown", { key: "w" });
+      const keyUpEvent = new KeyboardEvent("keyup", { key: "w" });
 
       // Act.
       window.dispatchEvent(keyDownEvent);
@@ -31,10 +48,10 @@ describe('input', () => {
       expect(inputState.upIntensity).toBe(0);
     });
 
-    it('Returns the proper state when two keys are pressed', () => {
+    it("Returns the proper state when two keys are pressed", () => {
       // Arrange.
-      const keyDownEventW = new KeyboardEvent('keydown', { key: 'w' });
-      const keyDownEventD = new KeyboardEvent('keydown', { key: 'd' });
+      const keyDownEventW = new KeyboardEvent("keydown", { key: "w" });
+      const keyDownEventD = new KeyboardEvent("keydown", { key: "d" });
 
       // Act.
       window.dispatchEvent(keyDownEventW);
@@ -46,12 +63,12 @@ describe('input', () => {
       expect(inputState.rightIntensity).toBe(keyboardInputIntensity);
     });
 
-    it('Returns the proper state when two keys are pressed, and then released', () => {
+    it("Returns the proper state when two keys are pressed, and then released", () => {
       // Arrange.
-      const keyDownEventW = new KeyboardEvent('keydown', { key: 'w' });
-      const keyDownEventD = new KeyboardEvent('keydown', { key: 'd' });
-      const keyUpEventW = new KeyboardEvent('keyup', { key: 'w' });
-      const keyUpEventD = new KeyboardEvent('keyup', { key: 'd' });
+      const keyDownEventW = new KeyboardEvent("keydown", { key: "w" });
+      const keyDownEventD = new KeyboardEvent("keydown", { key: "d" });
+      const keyUpEventW = new KeyboardEvent("keyup", { key: "w" });
+      const keyUpEventD = new KeyboardEvent("keyup", { key: "d" });
 
       // Act.
       window.dispatchEvent(keyDownEventW);
@@ -62,6 +79,69 @@ describe('input', () => {
 
       // Assert.
       expect(inputState.upIntensity).toBe(0);
+      expect(inputState.rightIntensity).toBe(0);
+    });
+
+    it("Returns the proper state when the device is oriented in the dead zone", () => {
+      // Arrange.
+
+      // Using a generic 'Event' because JSDom does not support the DeviceOrientation constructor.
+      const deviceOrientationEvent = new Event("deviceorientation");
+      Object.defineProperties(deviceOrientationEvent, {
+        beta: { value: 0, writable: false },
+        gamma: { value: 0, writable: false }
+      });
+
+      // Act.
+      window.dispatchEvent(deviceOrientationEvent);
+      const inputState = getInputState();
+
+      // Assert.
+      expect(inputState.upIntensity).toBe(0);
+      expect(inputState.downIntensity).toBe(0);
+      expect(inputState.leftIntensity).toBe(0);
+      expect(inputState.rightIntensity).toBe(0);
+    });
+
+    it("Returns the proper state when the device is oriented in the 'up' direction with an intensity of 1", () => {
+      // Arrange.
+
+      // Using a generic 'Event' because JSDom does not support the DeviceOrientation constructor.
+      const deviceOrientationEvent = new Event("deviceorientation");
+      Object.defineProperties(deviceOrientationEvent, {
+        beta: { value: -intensity1Threshold, writable: false },
+        gamma: { value: 0, writable: false }
+      });
+
+      // Act.
+      window.dispatchEvent(deviceOrientationEvent);
+      const inputState = getInputState();
+
+      // Assert.
+      expect(inputState.upIntensity).toBe(1);
+      expect(inputState.downIntensity).toBe(0);
+      expect(inputState.leftIntensity).toBe(0);
+      expect(inputState.rightIntensity).toBe(0);
+    });
+
+    it("Returns the proper state when the device is oriented in the 'up' direction with an intensity of 2", () => {
+      // Arrange.
+
+      // Using a generic 'Event' because JSDom does not support the DeviceOrientation constructor.
+      const deviceOrientationEvent = new Event("deviceorientation");
+      Object.defineProperties(deviceOrientationEvent, {
+        beta: { value: -intensity2Threshold, writable: false },
+        gamma: { value: 0, writable: false }
+      });
+
+      // Act.
+      window.dispatchEvent(deviceOrientationEvent);
+      const inputState = getInputState();
+
+      // Assert.
+      expect(inputState.upIntensity).toBe(2);
+      expect(inputState.downIntensity).toBe(0);
+      expect(inputState.leftIntensity).toBe(0);
       expect(inputState.rightIntensity).toBe(0);
     });
   });

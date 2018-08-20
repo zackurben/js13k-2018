@@ -1,4 +1,5 @@
-import getKeyboardInputState from './keyboard-input';
+import getGyroInputState from "./gyro-input";
+import getKeyboardInputState from "./keyboard-input";
 
 // The intensity given to a keyboard key press. Can be a minimum of 1 and a maximum of 2.
 const keyboardInputIntensity = 2;
@@ -16,6 +17,7 @@ export default function getInputState() {
   };
 
   const keyboardInputState = getKeyboardInputState();
+  const gyroInputState = getGyroInputState();
 
   if (keyboardInputState.w) {
     inputState.upIntensity = keyboardInputIntensity;
@@ -33,7 +35,21 @@ export default function getInputState() {
     inputState.rightIntensity = keyboardInputIntensity;
   }
 
-  // TODO: Add gyro input handling here to allow it to override keyboard input.
+  if (gyroInputState.upIntensity > 0) {
+    inputState.upIntensity = gyroInputState.upIntensity;
+  }
+
+  if (gyroInputState.downIntensity > 0) {
+    inputState.downIntensity = gyroInputState.downIntensity;
+  }
+
+  if (gyroInputState.leftIntensity > 0) {
+    inputState.leftIntensity = gyroInputState.leftIntensity;
+  }
+
+  if (gyroInputState.rightIntensity > 0) {
+    inputState.rightIntensity = gyroInputState.rightIntensity;
+  }
 
   return inputState;
 }
