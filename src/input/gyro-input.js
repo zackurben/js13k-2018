@@ -1,8 +1,4 @@
-// Minimum amount of axis movement to be considered an "intensity 1" movement.
-const intensity1Threshold = 10;
-
-// Minimum amount of axis movement to be considered an "intensity 2" movement.
-const intensity2Threshold = 20;
+import { gyro } from "./input-variables";
 
 /**
  * The current state of the input.
@@ -36,11 +32,11 @@ function _handleDeviceOrientation(deviceOrientationEvent) {
 }
 
 function _getPositiveIntensity(axisValue) {
-  if (axisValue >= intensity1Threshold) {
+  if (axisValue >= gyro.intensityAxisThresholds[1]) {
     return 1;
   }
 
-  if (axisValue >= intensity2Threshold) {
+  if (axisValue >= gyro.intensityAxisThresholds[2]) {
     return 2;
   }
 
@@ -48,11 +44,11 @@ function _getPositiveIntensity(axisValue) {
 }
 
 function _getNegativeIntensity(axisValue) {
-  if (axisValue <= -intensity2Threshold) {
+  if (axisValue <= -gyro.intensityAxisThresholds[2]) {
     return 2;
   }
 
-  if (axisValue <= -intensity1Threshold) {
+  if (axisValue <= -gyro.intensityAxisThresholds[1]) {
     return 1;
   }
 

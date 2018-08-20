@@ -1,10 +1,5 @@
 import getGyroInputState from "./gyro-input";
-
-// Minimum amount of axis movement to be considered an "intensity 1" movement.
-const intensity1Threshold = 10;
-
-// Minimum amount of axis movement to be considered an "intensity 2" movement.
-const intensity2Threshold = 20;
+import { gyro } from "./input-variables";
 
 describe("gyro-input", () => {
   describe("#getGyroInputState", () => {
@@ -46,7 +41,7 @@ describe("gyro-input", () => {
       // Using a generic 'Event' because JSDom does not support the DeviceOrientation constructor.
       const deviceOrientationEvent = new Event("deviceorientation");
       Object.defineProperties(deviceOrientationEvent, {
-        beta: { value: -intensity1Threshold, writable: false },
+        beta: { value: -gyro.intensityAxisThresholds[1], writable: false },
         gamma: { value: 0, writable: false }
       });
 
@@ -67,7 +62,7 @@ describe("gyro-input", () => {
       // Using a generic 'Event' because JSDom does not support the DeviceOrientation constructor.
       const deviceOrientationEvent = new Event("deviceorientation");
       Object.defineProperties(deviceOrientationEvent, {
-        beta: { value: -intensity2Threshold, writable: false },
+        beta: { value: -gyro.intensityAxisThresholds[2], writable: false },
         gamma: { value: 0, writable: false }
       });
 

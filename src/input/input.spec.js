@@ -1,13 +1,5 @@
 import getInputState from "./input";
-
-// The intensity given to a keyboard key press. Can be a minimum of 1 and a maximum of 2.
-const keyboardInputIntensity = 2;
-
-// Minimum amount of axis movement to be considered an "intensity 1" movement.
-const intensity1Threshold = 10;
-
-// Minimum amount of axis movement to be considered an "intensity 2" movement.
-const intensity2Threshold = 20;
+import { gyro, keyboard } from "./input-variables";
 
 describe("input", () => {
   describe("#getInputState", () => {
@@ -31,7 +23,7 @@ describe("input", () => {
       const inputState = getInputState();
 
       // Assert.
-      expect(inputState.upIntensity).toBe(keyboardInputIntensity);
+      expect(inputState.upIntensity).toBe(keyboard.intensity);
     });
 
     it("Returns the proper state when one key is pressed, and then released", () => {
@@ -59,8 +51,8 @@ describe("input", () => {
       const inputState = getInputState();
 
       // Assert.
-      expect(inputState.upIntensity).toBe(keyboardInputIntensity);
-      expect(inputState.rightIntensity).toBe(keyboardInputIntensity);
+      expect(inputState.upIntensity).toBe(keyboard.intensity);
+      expect(inputState.rightIntensity).toBe(keyboard.intensity);
     });
 
     it("Returns the proper state when two keys are pressed, and then released", () => {
@@ -109,7 +101,7 @@ describe("input", () => {
       // Using a generic 'Event' because JSDom does not support the DeviceOrientation constructor.
       const deviceOrientationEvent = new Event("deviceorientation");
       Object.defineProperties(deviceOrientationEvent, {
-        beta: { value: -intensity1Threshold, writable: false },
+        beta: { value: -gyro.intensityAxisThresholds[1], writable: false },
         gamma: { value: 0, writable: false }
       });
 
@@ -130,7 +122,7 @@ describe("input", () => {
       // Using a generic 'Event' because JSDom does not support the DeviceOrientation constructor.
       const deviceOrientationEvent = new Event("deviceorientation");
       Object.defineProperties(deviceOrientationEvent, {
-        beta: { value: -intensity2Threshold, writable: false },
+        beta: { value: -gyro.intensityAxisThresholds[2], writable: false },
         gamma: { value: 0, writable: false }
       });
 
