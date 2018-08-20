@@ -34,7 +34,25 @@ export default class Player {
       let points = this.intersects(wall);
       let b = wall.bounds();
 
-      points.forEach(pt => {});
+      let x, y;
+      points.forEach(([px, py]) => {
+        if (x === undefined) {
+          x = px;
+        }
+        if (y === undefined) {
+          y = py;
+        }
+
+        x = Math.max(x, px);
+        y = Math.max(y, py);
+      });
+
+      if (x !== undefined) {
+        this.x += x;
+      }
+      if (y !== undefined) {
+        this.y += y;
+      }
     });
   }
 
@@ -54,20 +72,32 @@ export default class Player {
     ];
   }
 
+  static intersect(point, bounds) {
+    let y = point.y > bounds.top && point.y < bounds.bottom;
+    let x = point.x > bounds.left && point.x < bounds.right;
+    return x && y;
+  }
+
   intersects(wall) {
     let self = this.bounds();
     let bounds = wall.bounds();
 
-    let out = [];
-    self.forEach(pt => {
-      let y = pt.y > bounds.top && pt.y < bounds.bottom;
-      let x = pt.x > bounds.left && pt.x < bounds.right;
+    return self
+      .map((pt, index) => {
+        if (Player.intersect(pt, bounds)) {
+          // Check horizontal bounds.
+          let a = bounds.left - pt.x;
+          let b = bounds.right - pt.x;
 
-      if (x && y) {
-        out.push(pt);
-      }
-    });
+          // Check vertical bounds.
+          let c = bounds.top - pt.y;
+          let d = bounds.bottom - pt.y;
 
-    return out;
+          return [Math.min(a, b), Math.min(c, d)];
+        }
+
+        return [0, 0];
+      })
+      .filter(bound => bound[0] !== 0 && bound[1] !== 0);
   }
 }
