@@ -20,8 +20,8 @@ const getCanvas = () => {
 };
 
 let walls = [
-  [100, 150, 200, 150, 10]
-  // [100, 200, 200, 200, 1]
+  [100, 100, 10, 100],
+  [200, 50, 100, 10]
 ].map(item => new Wall(item));
 
 // The game context.

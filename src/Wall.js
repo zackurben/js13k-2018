@@ -1,22 +1,36 @@
 'use strict';
 
 export default class Wall {
-  constructor([x1, y1, x2, y2, width = 10, color = 'black']) {
-    this.x1 = x1;
-    this.y1 = y1;
-    this.x2 = x2;
-    this.y2 = y2;
+  constructor([x, y, height = 10, width = 10, color = 'black']) {
+    this.x = x;
+    this.y = y;
+
+    this.height = height;
     this.width = width;
+
+    this.halfHeight = this.height / 2;
+    this.halfWidth = this.width / 2;
+
     this.color = color;
   }
 
-  render({ canvas }) {
-    canvas.strokeStyle = this.color;
-    canvas.lineWidth = this.width;
-    canvas.beginPath();
-    canvas.moveTo(this.x1, this.y1);
-    canvas.lineTo(this.x2, this.y2);
-    canvas.stroke();
+  render({ canvas, Config }) {
+    canvas.fillStyle = this.color;
+    canvas.fillRect(
+      this.x - this.halfWidth,
+      this.y - this.halfHeight,
+      this.width,
+      this.height
+    );
+
+    // Debug the center point
+    if (Config.debug) {
+      canvas.beginPath();
+      canvas.fillStyle = 'green';
+      canvas.arc(this.x, this.y, 4, 0, Math.PI * 2);
+      canvas.fill();
+      canvas.closePath();
+    }
   }
 
   update(delta) {}

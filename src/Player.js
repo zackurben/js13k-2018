@@ -5,13 +5,31 @@ export default class Player {
     this.speed = 0.1;
     this.x = 10;
     this.y = 10;
+
     this.height = 10;
     this.width = 10;
+
+    this.halfHeight = this.height / 2;
+    this.halfWidth = this.width / 2;
   }
 
-  render({ canvas }) {
+  render({ canvas, Config }) {
     canvas.fillStyle = 'rgba(0, 0, 0, 1)';
-    canvas.fillRect(this.x, this.y, this.width, this.height);
+    canvas.fillRect(
+      this.x - this.halfWidth,
+      this.y - this.halfHeight,
+      this.width,
+      this.height
+    );
+
+    // Debug the center point
+    if (Config.debug) {
+      canvas.beginPath();
+      canvas.fillStyle = 'green';
+      canvas.arc(this.x, this.y, 4, 0, Math.PI * 2);
+      canvas.fill();
+      canvas.closePath();
+    }
   }
 
   update(delta, ctx) {
