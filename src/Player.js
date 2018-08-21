@@ -2,7 +2,7 @@
 
 export default class Player {
   constructor() {
-    this.speed = 0.1;
+    this.speed = 0.3;
     this.x = 10;
     this.y = 10;
 
@@ -15,107 +15,57 @@ export default class Player {
 
   render({ canvas, Config }) {
     canvas.fillStyle = 'rgba(0, 0, 0, 1)';
-    canvas.fillRect(
-      this.x - this.halfWidth,
-      this.y - this.halfHeight,
-      this.width,
-      this.height
-    );
+    canvas.fillRect(this.x, this.y, this.width, this.height);
 
-    // Debug the center point
     if (Config.debug) {
+      // Debug the center point
       canvas.beginPath();
       canvas.fillStyle = 'green';
-      canvas.arc(this.x, this.y, 4, 0, Math.PI * 2);
+      canvas.arc(
+        this.x + this.halfWidth,
+        this.y + this.halfHeight,
+        4,
+        0,
+        Math.PI * 2
+      );
       canvas.fill();
+      canvas.closePath();
+
+      // Debug the aabb collision box
+      canvas.beginPath();
+      canvas.strokeStyle = 'red';
+      canvas.strokeRect(this.x, this.y, this.width, this.height);
       canvas.closePath();
     }
   }
 
-  update(delta, ctx) {
-    // keep the player within the bounds of the map.
-    if (this.x < 0) {
-      this.x = 0;
-    }
-    if (this.y < 0) {
-      this.y = 0;
-    }
-    if (this.x + this.width > ctx.Config.width) {
-      this.x = ctx.Config.width - this.width;
-    }
-    if (this.y + this.height > ctx.Config.height) {
-      this.y = ctx.Config.height - this.height;
-    }
+  update(delta, ctx) {}
 
+  move(ctx, point) {
     // On each update, check the bounds for each wall.
+    let canMove = true;
     ctx.walls.forEach(wall => {
-      let points = this.intersects(wall);
-      let b = wall.bounds();
-
-      let x, y;
-      points.forEach(([px, py]) => {
-        if (x === undefined) {
-          x = px;
-        }
-        if (y === undefined) {
-          y = py;
-        }
-
-        x = Math.max(x, px);
-        y = Math.max(y, py);
-      });
-
-      if (x !== undefined) {
-        this.x += x;
-      }
-      if (y !== undefined) {
-        this.y += y;
+      if (this.intersects(point, wall)) {
+        canMove = false;
       }
     });
+
+    if (canMove) {
+      this.x = point.x;
+      this.y = point.y;
+    }
   }
 
-  bounds() {
-    return [
-      // top left
-      { x: this.x, y: this.y },
+  intersects(point, wall) {
+    if (
+      point.x < wall.x + wall.width &&
+      point.x + this.width > wall.x &&
+      point.y < wall.y + wall.height &&
+      point.y + this.height > wall.y
+    ) {
+      return true;
+    }
 
-      // top right
-      { x: this.x + this.width, y: this.y },
-
-      // bottom left
-      { x: this.x, y: this.y + this.height },
-
-      // bottom right
-      { x: this.x + this.width, y: this.y + this.height }
-    ];
-  }
-
-  static intersect(point, bounds) {
-    let y = point.y > bounds.top && point.y < bounds.bottom;
-    let x = point.x > bounds.left && point.x < bounds.right;
-    return x && y;
-  }
-
-  intersects(wall) {
-    let self = this.bounds();
-    let bounds = wall.bounds();
-
-    return self
-      .map((pt, index) => {
-        if (Player.intersect(pt, bounds)) {
-          // Check horizontal bounds.
-          let a = bounds.left - pt.x;
-          let b = bounds.right - pt.x;
-
-          // Check vertical bounds.
-          let c = bounds.top - pt.y;
-          let d = bounds.bottom - pt.y;
-
-          return [Math.min(a, b), Math.min(c, d)];
-        }
-
-        return [0, 0];
-      })
-      .filter(bound => bound[0] !== 0 && bound[1] !== 0);
+    return false;
   }
 }

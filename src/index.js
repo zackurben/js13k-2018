@@ -19,10 +19,9 @@ const getCanvas = () => {
   return html.getContext('2d');
 };
 
-let walls = [
-  [100, 100, 10, 100],
-  [200, 50, 100, 10]
-].map(item => new Wall(item));
+let walls = [[100, 100, 10, 100], [200, 50, 100, 10]].map(
+  item => new Wall(item)
+);
 
 // The game context.
 const ctx = {

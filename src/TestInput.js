@@ -55,17 +55,20 @@ export default class TestInput {
   render({ canvas }) {}
 
   update(delta, ctx) {
+    let temp = { x: ctx.player.x, y: ctx.player.y };
     if (this.direction.up) {
-      ctx.player.y -= parseInt(ctx.player.speed * delta);
+      temp.y -= parseInt(ctx.player.speed * delta);
     }
     if (this.direction.right) {
-      ctx.player.x += parseInt(ctx.player.speed * delta);
+      temp.x += parseInt(ctx.player.speed * delta);
     }
     if (this.direction.down) {
-      ctx.player.y += parseInt(ctx.player.speed * delta);
+      temp.y += parseInt(ctx.player.speed * delta);
     }
     if (this.direction.left) {
-      ctx.player.x -= parseInt(ctx.player.speed * delta);
+      temp.x -= parseInt(ctx.player.speed * delta);
     }
+
+    ctx.player.move(ctx, temp);
   }
 }
