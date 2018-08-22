@@ -1,6 +1,7 @@
 'use strict';
 
 import Wall from './Wall';
+import Physics from './Physics';
 
 export default class TestInput {
   constructor() {
@@ -114,7 +115,7 @@ export default class TestInput {
 
     window.onclick = event => {
       let brick = this.builderBricks[this.brickIndex];
-      if (brick) {
+      if (this.editor && brick) {
         this.bricks.push(
           new Wall([
             this.mouse.x,
@@ -125,6 +126,21 @@ export default class TestInput {
           ])
         );
       }
+    };
+
+    window.oncontextmenu = event => {
+      // Search the list of bricks to check for intersections
+      this.bricks = this.bricks
+        .map((brick, index) => {
+          if (Physics.intersects(this.mouse, brick)) {
+            return undefined;
+          }
+
+          return brick;
+        })
+        .filter(item => item !== undefined);
+
+      event.preventDefault();
     };
   }
 
