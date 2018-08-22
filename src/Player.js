@@ -1,5 +1,7 @@
 'use strict';
 
+import Physics from './Physics';
+
 export default class Player {
   constructor() {
     this.speed = 0.3;
@@ -45,7 +47,12 @@ export default class Player {
     // On each update, check the bounds for each wall.
     let canMove = true;
     ctx.walls.forEach(wall => {
-      if (this.intersects(point, wall)) {
+      if (
+        Physics.intersects(
+          Object.assign({}, point, { height: this.height, width: this.width }),
+          wall
+        )
+      ) {
         canMove = false;
       }
     });
@@ -54,18 +61,5 @@ export default class Player {
       this.x = point.x;
       this.y = point.y;
     }
-  }
-
-  intersects(point, wall) {
-    if (
-      point.x < wall.x + wall.width &&
-      point.x + this.width > wall.x &&
-      point.y < wall.y + wall.height &&
-      point.y + this.height > wall.y
-    ) {
-      return true;
-    }
-
-    return false;
   }
 }
