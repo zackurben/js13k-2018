@@ -1,5 +1,7 @@
 'use strict';
 
+import Wall from './Wall';
+
 export default class TestInput {
   constructor() {
     this.direction = {
@@ -8,6 +10,40 @@ export default class TestInput {
       down: 0,
       left: 0
     };
+
+    // Temporary mouse location
+    this.mouse = { x: 0, y: 0 };
+
+    // Whether or not we're in the editor mode.
+    this.editor = false;
+
+    // The list of temp map bricks.
+    this.bricks = [];
+
+    // The currently selected brick to place.
+    this.brickIndex = 1;
+
+    // The available bricks to use
+    this.builderBricks = [
+      undefined,
+      { width: 100, height: 10 },
+      { width: 10, height: 100 }
+    ];
+
+    // Currently selected color.
+    this.colorIndex = 0;
+
+    // The list of available brick colors.
+    this.colors = [
+      'black',
+      'red',
+      'orange',
+      'yellow',
+      'green',
+      'blue',
+      'indigo',
+      'violet'
+    ];
 
     window.onkeydown = event => {
       switch (event.key) {
@@ -26,6 +62,15 @@ export default class TestInput {
         case 'a':
         case 'ArrowLeft':
           this.direction.left = 1;
+          break;
+        case 'Escape':
+          this.editor = !this.editor;
+          break;
+        case '1':
+          this.brickIndex = 1;
+          break;
+        case '2':
+          this.brickIndex = 2;
           break;
       }
     };
@@ -50,9 +95,50 @@ export default class TestInput {
           break;
       }
     };
+
+    window.onmousemove = ({ clientX, clientY }) => {
+      this.mouse.x = clientX;
+      this.mouse.y = clientY;
+    };
+
+    window.onmousewheel = ({ deltaY }) => {
+      let delta = deltaY > 0 ? 1 : -1;
+      if (this.colorIndex + delta >= this.colors.length) {
+        this.colorIndex = this.colors.length;
+      } else if (this.colorIndex + delta < 0) {
+        this.colorIndex = 0;
+      } else {
+        this.colorIndex += delta;
+      }
+    };
+
+    window.onclick = event => {
+      let brick = this.builderBricks[this.brickIndex];
+      if (brick) {
+        this.bricks.push(
+          new Wall([
+            this.mouse.x,
+            this.mouse.y,
+            brick.height,
+            brick.width,
+            this.colors[this.colorIndex]
+          ])
+        );
+      }
+    };
   }
 
-  render({ canvas }) {}
+  render({ canvas, ctx, Config }) {
+    this.bricks.forEach(brick => brick.render({ canvas, ctx, Config }));
+
+    if (this.editor) {
+      let brick = this.builderBricks[this.brickIndex];
+      if (brick) {
+        canvas.fillStyle = this.colors[this.colorIndex];
+        canvas.fillRect(this.mouse.x, this.mouse.y, brick.width, brick.height);
+      }
+    }
+  }
 
   update(delta, ctx) {
     let temp = { x: ctx.player.x, y: ctx.player.y };
