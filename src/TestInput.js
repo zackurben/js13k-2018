@@ -2,6 +2,7 @@
 
 import Wall from './Wall';
 import Physics from './Physics';
+import Config from './Config';
 
 export default class TestInput {
   constructor() {
@@ -118,8 +119,8 @@ export default class TestInput {
       if (this.editor && brick) {
         this.bricks.push(
           new Wall([
-            this.mouse.x,
-            this.mouse.y,
+            parseInt(this.mouse.x / Config.gutter) * Config.gutter,
+            parseInt(this.mouse.y / Config.gutter) * Config.gutter,
             brick.height,
             brick.width,
             this.colors[this.colorIndex]
@@ -128,19 +129,22 @@ export default class TestInput {
       }
     };
 
-    window.oncontextmenu = event => {
-      // Search the list of bricks to check for intersections
-      this.bricks = this.bricks
-        .map((brick, index) => {
-          if (Physics.intersects(this.mouse, brick)) {
-            return undefined;
-          }
+    window.oncontextmenu = event => event.preventDefault();
 
-          return brick;
-        })
-        .filter(item => item !== undefined);
+    window.onmousedown = ({ button }) => {
+      // RMB click
+      if (this.editor && button === 2) {
+        // Search the list of bricks to check for intersections
+        this.bricks = this.bricks
+          .map((brick, index) => {
+            if (Physics.intersects(this.mouse, brick)) {
+              return undefined;
+            }
 
-      event.preventDefault();
+            return brick;
+          })
+          .filter(item => item !== undefined);
+      }
     };
   }
 
@@ -151,7 +155,12 @@ export default class TestInput {
       let brick = this.builderBricks[this.brickIndex];
       if (brick) {
         canvas.fillStyle = this.colors[this.colorIndex];
-        canvas.fillRect(this.mouse.x, this.mouse.y, brick.width, brick.height);
+        canvas.fillRect(
+          parseInt(this.mouse.x / Config.gutter) * Config.gutter,
+          parseInt(this.mouse.y / Config.gutter) * Config.gutter,
+          brick.width,
+          brick.height
+        );
       }
     }
   }
