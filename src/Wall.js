@@ -41,4 +41,8 @@ export default class Wall {
   }
 
   update(delta) {}
+
+  toJSON() {
+    return [this.x, this.y, this.height, this.width, this.color];
+  }
 }

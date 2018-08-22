@@ -29,7 +29,9 @@ export default class TestInput {
     this.builderBricks = [
       undefined,
       { width: 100, height: 10 },
-      { width: 10, height: 100 }
+      { width: 10, height: 100 },
+      { width: 40, height: 10 },
+      { width: 10, height: 40 }
     ];
 
     // Currently selected color.
@@ -68,11 +70,14 @@ export default class TestInput {
         case 'Escape':
           this.editor = !this.editor;
           break;
-        case '1':
-          this.brickIndex = 1;
+        case '`':
+          console.log(JSON.stringify(this.bricks));
           break;
+        case '1':
         case '2':
-          this.brickIndex = 2;
+        case '3':
+        case '4':
+          this.brickIndex = parseInt(event.key);
           break;
       }
     };
