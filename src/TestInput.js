@@ -2,7 +2,7 @@
 
 import Wall from './Wall';
 import Physics from './Physics';
-import Config from './Config';
+import Config from '../Config';
 
 export default class TestInput {
   constructor() {
@@ -29,7 +29,7 @@ export default class TestInput {
 
     // The available bricks to use
     this.builderBricks = [
-      undefined,
+      undefined, // Dummy element to fix off by one index.
       { width: 100, height: 10 },
       { width: 10, height: 100 },
       { width: 40, height: 10 },

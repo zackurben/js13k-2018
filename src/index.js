@@ -1,7 +1,7 @@
 'use strict';
 
-import './index.css';
-import Config from './Config';
+import '../index.css';
+import Config from '../Config';
 import Player from './Player';
 import Wall from './Wall';
 import TestImport from './TestInput';
