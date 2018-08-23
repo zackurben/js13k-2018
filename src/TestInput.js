@@ -6,6 +6,8 @@ import Config from './Config';
 
 export default class TestInput {
   constructor() {
+    // The current player input direction, used to sync event movement with the
+    // game loop.
     this.direction = {
       up: 0,
       right: 0,
@@ -49,6 +51,7 @@ export default class TestInput {
       'violet'
     ];
 
+    // On keydown, process simple input events.
     window.onkeydown = event => {
       switch (event.key) {
         case 'w':
@@ -82,6 +85,7 @@ export default class TestInput {
       }
     };
 
+    // Force movement to hold keys down.
     window.onkeyup = event => {
       switch (event.key) {
         case 'w':
@@ -103,11 +107,13 @@ export default class TestInput {
       }
     };
 
+    // Update the mouse location on each move, for use in the editor.
     window.onmousemove = ({ clientX, clientY }) => {
       this.mouse.x = clientX;
       this.mouse.y = clientY;
     };
 
+    // Change the selected color index for the editor on scroll wheel.
     window.onmousewheel = ({ deltaY }) => {
       let delta = deltaY > 0 ? 1 : -1;
       if (this.colorIndex + delta >= this.colors.length) {
@@ -119,6 +125,7 @@ export default class TestInput {
       }
     };
 
+    // Place bricks in the scene when the editor is active.
     window.onclick = event => {
       let brick = this.builderBricks[this.brickIndex];
       if (this.editor && brick) {
@@ -134,12 +141,16 @@ export default class TestInput {
       }
     };
 
+    // Remove default browser RMB menu
     window.oncontextmenu = event => event.preventDefault();
 
+    // Check for the mouse down event to remove bricks. This works better than
+    // oncontextmenu because its the down event vs up.
     window.onmousedown = ({ button }) => {
       // RMB click
       if (this.editor && button === 2) {
-        // Search the list of bricks to check for intersections
+        // Search the list of bricks to check for intersections and remove any
+        // bricks under the mouse location.
         this.bricks = this.bricks
           .map((brick, index) => {
             if (Physics.intersects(this.mouse, brick)) {
@@ -153,6 +164,12 @@ export default class TestInput {
     };
   }
 
+  /**
+   * The render function, called each frame.
+   *
+   * @param {Object} ctx
+   *   The game context object
+   */
   render({ canvas, ctx, Config }) {
     this.bricks.forEach(brick => brick.render({ canvas, ctx, Config }));
 
@@ -170,6 +187,14 @@ export default class TestInput {
     }
   }
 
+  /**
+   * The update function, called each frame.
+   *
+   * @param {Number} delta
+   *   The time in ms since the last frame
+   * @param {Number} ctx
+   *   The game context object
+   */
   update(delta, ctx) {
     let temp = { x: ctx.player.x, y: ctx.player.y };
     if (this.direction.up) {

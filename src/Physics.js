@@ -1,6 +1,20 @@
 'use strict';
 
+/**
+ * A simple physics utility class.
+ */
 export default class Physics {
+  /**
+   * Check for intersections with simpleton AABB collisions.
+   *
+   * @param {Object} one
+   *   The first object to use for calculations
+   * @param {Object} two
+   *   The second object to use for calculations
+   *
+   * @returns {Boolean}
+   *   Whether or not the two AABBs intersect.
+   */
   static intersects(one, two) {
     if (
       one.x < two.x + (two.width || 0) &&
