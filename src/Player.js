@@ -1,6 +1,16 @@
 'use strict';
 
+import Physics from './Physics';
+
+/**
+ * A simple player class.
+ */
 export default class Player {
+  /**
+   * Generic player constructor
+   *
+   * @TODO: Add customizable x/y inputs for different map spawns.
+   */
   constructor() {
     this.speed = 0.3;
     this.x = 10;
@@ -9,14 +19,22 @@ export default class Player {
     this.height = 10;
     this.width = 10;
 
+    // Store the half dimensions for rendering debug content.
     this.halfHeight = this.height / 2;
     this.halfWidth = this.width / 2;
   }
 
+  /**
+   * The render function, called each frame.
+   *
+   * @param {Object} ctx
+   *   The game context object
+   */
   render({ canvas, Config }) {
     canvas.fillStyle = 'rgba(0, 0, 0, 1)';
     canvas.fillRect(this.x, this.y, this.width, this.height);
 
+    // If debug is enabled, render the center point of the player and its AABB.
     if (Config.debug) {
       // Debug the center point
       canvas.beginPath();
@@ -39,33 +57,46 @@ export default class Player {
     }
   }
 
+  /**
+   * The update function, called each frame.
+   *
+   * @param {Number} delta
+   *   The time in ms since the last frame
+   * @param {Number} ctx
+   *   The game context object
+   */
   update(delta, ctx) {}
 
+  /**
+   * The update function, called each frame.
+   *
+   * @param {Number} ctx
+   *   The game context object
+   * @param {Object} point
+   *   The game point to move to
+   */
   move(ctx, point) {
-    // On each update, check the bounds for each wall.
+    // Assume the player can move anywhere.
     let canMove = true;
+
+    // Check each known wall in the game context and try to invalidate the move.
     ctx.walls.forEach(wall => {
-      if (this.intersects(point, wall)) {
+      if (
+        Physics.intersects(
+          // Shim the point to contain the player dimensions for correct AABB
+          Object.assign({}, point, { height: this.height, width: this.width }),
+          wall
+        )
+      ) {
+        // Any player intersections invalidate the move.
         canMove = false;
       }
     });
 
+    // Only change the player location if the move passed all wall checks.
     if (canMove) {
       this.x = point.x;
       this.y = point.y;
     }
-  }
-
-  intersects(point, wall) {
-    if (
-      point.x < wall.x + wall.width &&
-      point.x + this.width > wall.x &&
-      point.y < wall.y + wall.height &&
-      point.y + this.height > wall.y
-    ) {
-      return true;
-    }
-
-    return false;
   }
 }
