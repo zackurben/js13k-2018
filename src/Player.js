@@ -12,7 +12,7 @@ export default class Player {
    * @TODO: Add customizable x/y inputs for different map spawns.
    */
   constructor() {
-    this.speed = 0.3;
+    this.speed = 0.15;
     this.x = 10;
     this.y = 10;
 

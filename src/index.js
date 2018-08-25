@@ -2,9 +2,10 @@
 
 import '../index.css';
 import Config from '../Config';
+import Input from './input/input';
 import Player from './Player';
 import Wall from './Wall';
-import TestImport from './TestInput';
+import MapEditor from './MapEditor';
 
 /**
  * Get a new canvas context for rendering.
@@ -31,13 +32,14 @@ let walls = [[100, 100, 10, 100], [200, 50, 100, 10]].map(
 const ctx = {
   canvas: getCanvas(),
   player: new Player(),
-  input: new TestImport(),
+  input: new Input(),
+  mapEditor: new MapEditor(),
   Config,
   walls
 };
 
 // The list of enumerated entities in the game.
-let entities = [ctx.player, ctx.input].concat(walls);
+let entities = [ctx.player, ctx.input, ctx.mapEditor].concat(walls);
 
 // The time in ms since the start of this game.
 let start = 0;

@@ -1,0 +1,8 @@
+{
+  "gyro": {
+    "intensityAxisThresholds": [0, 10, 20]
+  },
+  "keyboard": {
+    "intensity": 2
+  }
+}

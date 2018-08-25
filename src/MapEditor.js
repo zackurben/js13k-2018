@@ -6,15 +6,6 @@ import Config from '../Config';
 
 export default class TestInput {
   constructor() {
-    // The current player input direction, used to sync event movement with the
-    // game loop.
-    this.direction = {
-      up: 0,
-      right: 0,
-      down: 0,
-      left: 0
-    };
-
     // Temporary mouse location
     this.mouse = { x: 0, y: 0 };
 
@@ -54,22 +45,6 @@ export default class TestInput {
     // On keydown, process simple input events.
     window.onkeydown = event => {
       switch (event.key) {
-        case 'w':
-        case 'ArrowUp':
-          this.direction.up = 1;
-          break;
-        case 'd':
-        case 'ArrowRight':
-          this.direction.right = 1;
-          break;
-        case 's':
-        case 'ArrowDown':
-          this.direction.down = 1;
-          break;
-        case 'a':
-        case 'ArrowLeft':
-          this.direction.left = 1;
-          break;
         case 'Escape':
           this.editor = !this.editor;
           break;
@@ -81,28 +56,6 @@ export default class TestInput {
         case '3':
         case '4':
           this.brickIndex = parseInt(event.key);
-          break;
-      }
-    };
-
-    // Force movement to hold keys down.
-    window.onkeyup = event => {
-      switch (event.key) {
-        case 'w':
-        case 'ArrowUp':
-          this.direction.up = 0;
-          break;
-        case 'd':
-        case 'ArrowRight':
-          this.direction.right = 0;
-          break;
-        case 's':
-        case 'ArrowDown':
-          this.direction.down = 0;
-          break;
-        case 'a':
-        case 'ArrowLeft':
-          this.direction.left = 0;
           break;
       }
     };
@@ -190,26 +143,8 @@ export default class TestInput {
   /**
    * The update function, called each frame.
    *
-   * @param {Number} delta
-   *   The time in ms since the last frame
-   * @param {Number} ctx
-   *   The game context object
+   * @param {number} delta The time in ms since the last frame.
+   * @param {Object} ctx The game context object.
    */
-  update(delta, ctx) {
-    let temp = { x: ctx.player.x, y: ctx.player.y };
-    if (this.direction.up) {
-      temp.y -= parseInt(ctx.player.speed * delta);
-    }
-    if (this.direction.right) {
-      temp.x += parseInt(ctx.player.speed * delta);
-    }
-    if (this.direction.down) {
-      temp.y += parseInt(ctx.player.speed * delta);
-    }
-    if (this.direction.left) {
-      temp.x -= parseInt(ctx.player.speed * delta);
-    }
-
-    ctx.player.move(ctx, temp);
-  }
+  update(delta, ctx) {}
 }
