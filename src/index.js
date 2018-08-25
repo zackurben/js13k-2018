@@ -4,8 +4,8 @@ import '../index.css';
 import Config from '../Config';
 import Input from './input/input';
 import Player from './Player';
-import Wall from './Wall';
 import MapEditor from './MapEditor';
+import Level from './Level';
 
 /**
  * Get a new canvas context for rendering.
@@ -21,12 +21,6 @@ const getCanvas = () => {
   return html.getContext('2d');
 };
 
-// The current level to render.
-// @TODO: Replace with some level management system.
-let walls = [[100, 100, 10, 100], [200, 50, 100, 10]].map(
-  item => new Wall(item)
-);
-
 // The game context. Passed to each entity on update and render to make internal
 // variables accessible from sub-modules.
 const ctx = {
@@ -35,17 +29,19 @@ const ctx = {
   input: new Input(),
   mapEditor: new MapEditor(),
   Config,
-  walls
+  level: new Level()
 };
 
 // The list of enumerated entities in the game.
-let entities = [ctx.player, ctx.input, ctx.mapEditor].concat(walls);
+let entities = [ctx.player, ctx.input, ctx.mapEditor, ctx.level];
 
 // The time in ms since the start of this game.
 let start = 0;
 
 // The time in ms since the last frame.
 let delta = 0;
+
+ctx.level.load(1);
 
 /**
  * The primary game loop

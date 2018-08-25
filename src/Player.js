@@ -13,8 +13,8 @@ export default class Player {
    */
   constructor() {
     this.speed = 0.15;
-    this.x = 10;
-    this.y = 10;
+    this.x = 100;
+    this.y = 100;
 
     this.height = 10;
     this.width = 10;
@@ -80,7 +80,7 @@ export default class Player {
     let canMove = true;
 
     // Check each known wall in the game context and try to invalidate the move.
-    ctx.walls.forEach(wall => {
+    ctx.level.getWalls().forEach(wall => {
       if (
         Physics.intersects(
           // Shim the point to contain the player dimensions for correct AABB
