@@ -139,4 +139,12 @@ export default class TestInput {
       }
     }
   }
+
+  /**
+   * The update function, called each frame.
+   *
+   * @param {number} delta The time in ms since the last frame.
+   * @param {Object} ctx The game context object.
+   */
+  update(delta, ctx) {}
 }
