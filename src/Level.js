@@ -31,11 +31,16 @@ const levels = {
   7: toWalls(seven)
 };
 
+/**
+ * A simple level manager.
+ */
 export default class Level {
   constructor() {
     this.level = 1;
     this.walls = [];
     this.score = 0;
+
+    this.startTime = 0;
     this.time = 0;
   }
 
@@ -78,11 +83,17 @@ export default class Level {
    * @param {Number} ctx
    *   The game context object
    */
-  update(delta, ctx) {}
+  update(delta, ctx) {
+    let now = new Date().getTime() / 1000;
+    this.time = parseInt(now - this.startTime);
+  }
 
   load(id) {
     this.level = id;
     this.walls = levels[this.level];
+
+    // Restart the level timer on each level load.
+    this.startTime = parseInt(new Date().getTime() / 1000);
   }
 
   /**
