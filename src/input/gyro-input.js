@@ -48,12 +48,12 @@ function _getNegativeIntensity(axisDegrees) {
  * @returns {number} The intensity for the given axis degrees.
  */
 function _getPositiveIntensity(axisDegrees) {
-  if (axisDegrees >= gyro.intensityAxisThresholds[1]) {
-    return 1;
-  }
-
   if (axisDegrees >= gyro.intensityAxisThresholds[2]) {
     return 2;
+  }
+
+  if (axisDegrees >= gyro.intensityAxisThresholds[1]) {
+    return 1;
   }
 
   return 0;
