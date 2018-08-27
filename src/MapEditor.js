@@ -42,11 +42,24 @@ export default class TestInput {
       'violet'
     ];
 
+    // Whether or not to copy the map from the level to the editor.
+    this.syncMap = false;
+
+    // Whether or not to copy the map from the editor to the level.
+    this.copyMap = false;
+
     // On keydown, process simple input events.
     window.onkeydown = event => {
       switch (event.key) {
         case 'Escape':
           this.editor = !this.editor;
+
+          if (this.editor) {
+            this.syncMap = true;
+          }
+          else {
+            this.copyMap = true;
+          }
           break;
         case '`':
           console.log(JSON.stringify(this.bricks));
@@ -146,5 +159,18 @@ export default class TestInput {
    * @param {number} delta The time in ms since the last frame.
    * @param {Object} ctx The game context object.
    */
-  update(delta, ctx) {}
+  update(delta, ctx) {
+    // If we're syncing, copy the existing map into the editor. Clear the map,
+    // So everything is editable.
+    if (this.syncMap) {
+      this.bricks = ctx.level.getWalls();
+      ctx.level.walls = [];
+      this.syncMap = false;
+    } 
+    // If we're copying the map, re-set the walls in the level to add physics.
+    else if (this.copyMap) {
+      ctx.level.walls = this.bricks;
+      this.copyMap = false;
+    }
+  }
 }
