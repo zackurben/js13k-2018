@@ -74,4 +74,31 @@ export default class Wall {
   toJSON() {
     return [this.x, this.y, this.height, this.width, this.color];
   }
+
+  /**
+   * Copy the current wall with the optional modifications.
+   *
+   * @param [Number] x
+   *   The x location to use
+   * @param [Number] y
+   *   The y location to use
+   * @param [Number] height
+   *   The height to use
+   * @param [Number] width
+   *   The width to use
+   * @param [Number] color
+   *   The color to use
+   *
+   * @returns {Wall}
+   *   The new wall copy.
+   */
+  copy(x, y, height, width, color) {
+    return new Wall([
+      x || this.x,
+      y || this.y,
+      height || this.height,
+      width || this.width,
+      color || this.color
+    ]);
+  }
 }

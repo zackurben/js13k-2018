@@ -1,6 +1,7 @@
 'use strict';
 
 import Wall from './Wall';
+import Objective from './Objective';
 import one from './levels/1';
 import two from './levels/2';
 import three from './levels/3';
@@ -16,9 +17,20 @@ import seven from './levels/7';
  *   The input wall.
  *
  * @returns [Wall]
- *   The walls for the map.
+ *   A wall for the map.
  */
 const toWalls = input => input.map(w => new Wall(w));
+
+/**
+ * Convert the input data into objectives.
+ *
+ * @param {Array} input
+ *   The input objective.
+ *
+ * @returns [Objective]
+ *   An objective for the map.
+ */
+const toObjective = input => input.map(o => new Objective(o));
 
 // The level map.
 const levels = {
