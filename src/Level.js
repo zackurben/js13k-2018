@@ -34,13 +34,34 @@ const toObjective = input => input.map(o => new Objective(o));
 
 // The level map.
 const levels = {
-  1: toWalls(one),
-  2: toWalls(two),
-  3: toWalls(three),
-  4: toWalls(four),
-  5: toWalls(five),
-  6: toWalls(six),
-  7: toWalls(seven)
+  1: {
+    w: toWalls(one.w),
+    o: toObjective(one.o)
+  },
+  2: {
+    w: toWalls(two.w),
+    o: toObjective(two.o)
+  },
+  3: {
+    w: toWalls(three.w),
+    o: toObjective(three.o)
+  },
+  4: {
+    w: toWalls(four.w),
+    o: toObjective(four.o)
+  },
+  5: {
+    w: toWalls(five.w),
+    o: toObjective(five.o)
+  },
+  6: {
+    w: toWalls(six.w),
+    o: toObjective(six.o)
+  },
+  7: {
+    w: toWalls(seven.w),
+    o: toObjective(seven.o)
+  }
 };
 
 /**
@@ -50,6 +71,7 @@ export default class Level {
   constructor() {
     this.level = 1;
     this.walls = [];
+    this.objectives = [];
     this.score = 0;
 
     this.startTime = 0;
@@ -63,7 +85,8 @@ export default class Level {
    *   The game context object
    */
   render({ canvas, Config }) {
-    this.walls.forEach(wall => wall.render({ canvas, Config }));
+    this.walls.forEach(w => w.render({ canvas, Config }));
+    this.objectives.forEach(o => o.render({ canvas, Config }));
 
     // Draw the text for the level.
     canvas.font = `40px san-serif`;
@@ -102,7 +125,8 @@ export default class Level {
 
   load(id) {
     this.level = id;
-    this.walls = levels[this.level];
+    this.walls = levels[this.level].w;
+    this.objectives = levels[this.level].o;
 
     // Restart the level timer on each level load.
     this.startTime = parseInt(new Date().getTime() / 1000);
@@ -113,5 +137,12 @@ export default class Level {
    */
   getWalls() {
     return this.walls;
+  }
+
+  /**
+   *
+   */
+  getObjectives() {
+    return this.objectives;
   }
 }
