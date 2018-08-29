@@ -171,12 +171,12 @@ export default class TestInput {
     // So everything is editable.
     if (this.syncMap) {
       this.entities = ctx.level.getEntities();
-      ctx.level.walls = [];
+      ctx.level.entities = [];
       this.syncMap = false;
     }
     // If we're copying the map, re-set the walls in the level to add physics.
     else if (this.copyMap) {
-      ctx.level.walls = this.entities;
+      ctx.level.entities = this.entities;
       this.copyMap = false;
     }
   }
