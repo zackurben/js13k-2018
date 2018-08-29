@@ -70,8 +70,7 @@ const levels = {
 export default class Level {
   constructor() {
     this.level = 1;
-    this.walls = [];
-    this.objectives = [];
+    this.entities = [];
     this.score = 0;
 
     this.startTime = 0;
@@ -85,8 +84,7 @@ export default class Level {
    *   The game context object
    */
   render({ canvas, Config }) {
-    this.walls.forEach(w => w.render({ canvas, Config }));
-    this.objectives.forEach(o => o.render({ canvas, Config }));
+    this.entities.forEach(e => e.render({ canvas, Config }));
 
     // Draw the text for the level.
     canvas.font = `40px san-serif`;
@@ -125,8 +123,7 @@ export default class Level {
 
   load(id) {
     this.level = id;
-    this.walls = levels[this.level].w;
-    this.objectives = levels[this.level].o;
+    this.entities = [].concat(levels[this.level].w, levels[this.level].o);
 
     // Restart the level timer on each level load.
     this.startTime = parseInt(new Date().getTime() / 1000);
@@ -135,14 +132,7 @@ export default class Level {
   /**
    *
    */
-  getWalls() {
-    return this.walls;
-  }
-
-  /**
-   *
-   */
-  getObjectives() {
-    return this.objectives;
+  getEntities() {
+    return this.entities;
   }
 }

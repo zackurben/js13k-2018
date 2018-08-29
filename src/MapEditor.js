@@ -22,11 +22,10 @@ export default class TestInput {
     // The available entities to use
     this.builderEntities = [
       undefined, // Dummy element to fix off by one index.
-      new Wall([undefined, undefined, 10, 100])
-      // { width: 100, height: 10 },
-      // { width: 10, height: 100 },
-      // { width: 40, height: 10 },
-      // { width: 10, height: 40 }
+      new Wall([undefined, undefined, 10, 100]),
+      new Wall([undefined, undefined, 100, 10]),
+      new Wall([undefined, undefined, 10, 40]),
+      new Wall([undefined, undefined, 40, 10])
     ];
 
     // Currently selected color.
@@ -169,7 +168,7 @@ export default class TestInput {
     // If we're syncing, copy the existing map into the editor. Clear the map,
     // So everything is editable.
     if (this.syncMap) {
-      this.entities = ctx.level.getWalls();
+      this.entities = ctx.level.getEntities();
       ctx.level.walls = [];
       this.syncMap = false;
     }
