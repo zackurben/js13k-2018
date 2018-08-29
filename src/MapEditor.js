@@ -21,7 +21,6 @@ export default class TestInput {
 
     // The available entities to use
     this.builderEntities = [
-      undefined, // Dummy element to fix off by one index.
       new Wall([undefined, undefined, 10, 100]),
       new Wall([undefined, undefined, 100, 10]),
       new Wall([undefined, undefined, 10, 40]),
@@ -44,41 +43,10 @@ export default class TestInput {
       'violet'
     ];
 
-    // Whether or not to copy the map from the level to the editor.
-    this.syncMap = false;
-
-    // Whether or not to copy the map from the editor to the level.
-    this.copyMap = false;
+    this.keys = [];
 
     // On keydown, process simple input events.
-    window.onkeydown = event => {
-      switch (event.key) {
-        case 'Escape':
-          this.editor = !this.editor;
-
-          if (this.editor) {
-            this.syncMap = true;
-          } else {
-            this.copyMap = true;
-          }
-          break;
-        case '`':
-          console.log(
-            JSON.stringify({
-              w: this.entities.filter(w => w instanceof Wall),
-              o: this.entities.filter(o => o instanceof Objective)
-            })
-          );
-          break;
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-          this.entityIndex = parseInt(event.key);
-          break;
-      }
-    };
+    window.onkeydown = event => this.keys.push(event.key);
 
     // Update the mouse location on each move, for use in the editor.
     window.onmousemove = ({ clientX, clientY }) => {
@@ -160,6 +128,16 @@ export default class TestInput {
     }
   }
 
+  printMap(level) {
+    console.log(
+      `Level: ${level}`,
+      JSON.stringify({
+        w: this.entities.filter(w => w instanceof Wall),
+        o: this.entities.filter(o => o instanceof Objective)
+      })
+    );
+  }
+
   /**
    * The update function, called each frame.
    *
@@ -167,17 +145,58 @@ export default class TestInput {
    * @param {Object} ctx The game context object.
    */
   update(delta, ctx) {
-    // If we're syncing, copy the existing map into the editor. Clear the map,
-    // So everything is editable.
-    if (this.syncMap) {
-      this.entities = ctx.level.getEntities();
-      ctx.level.entities = [];
-      this.syncMap = false;
-    }
-    // If we're copying the map, re-set the walls in the level to add physics.
-    else if (this.copyMap) {
-      ctx.level.entities = this.entities;
-      this.copyMap = false;
+    // Process at-most 10 keys per frame.
+    for (let i = 0; i < 10; i++) {
+      let key = this.keys.shift();
+      if (key === undefined) {
+        break;
+      }
+
+      switch (key) {
+        case 'Escape':
+          this.editor = !this.editor;
+          ctx.Config.debug = this.editor;
+
+          // If we're syncing, copy the existing map into the editor. Clear the
+          // map, so everything is editable.
+          if (this.editor) {
+            this.entities = ctx.level.getEntities();
+            ctx.level.entities = [];
+          } else {
+            // If we're copying the map, re-set the walls in the level to add
+            // physics.
+            ctx.level.entities = this.entities;
+          }
+          break;
+        case '`':
+          if (!this.editor) return;
+
+          this.printMap(ctx.level.level);
+          break;
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+          if (!this.editor) return;
+
+          // Always print the current map before switching levels.
+          this.printMap(ctx.level.level);
+          ctx.level.load(parseInt(key));
+          break;
+        case 'q':
+        case 'w':
+        case 'e':
+        case 'r':
+        case 't':
+          let i = ['q', 'w', 'e', 'r', 't'].indexOf(key);
+          if (i == -1) return;
+
+          this.entityIndex = i;
+          break;
+      }
     }
   }
 }
