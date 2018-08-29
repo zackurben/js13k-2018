@@ -1,7 +1,17 @@
 'use strict';
 
 export default class Objective {
-  constructor([x, y, height = 10, width = 10, color = 'black']) {
+  constructor([
+    x,
+    y,
+    height = 10,
+    width = 10,
+    color = 'black',
+    score = 0,
+    trigger = true,
+    load = -1
+  ]) {
+    this.alive = true;
     this.x = x;
     this.y = y;
 
@@ -12,6 +22,9 @@ export default class Objective {
     this.halfWidth = this.width / 2;
 
     this.color = color;
+    this.score = score;
+    this.trigger = !!trigger;
+    this.load = load;
   }
 
   /**
@@ -21,7 +34,11 @@ export default class Objective {
    *   The game context object
    */
   render({ canvas, Config }) {
-    canvas.fillStyle = 'rgba(0, 0, 0, 1)';
+    if (!this.alive) {
+      return;
+    }
+
+    canvas.fillStyle = this.color;
     canvas.fillRect(this.x, this.y, this.width, this.height);
 
     // If debug is enabled, render the center of the objective and its AABB.
@@ -56,4 +73,53 @@ export default class Objective {
    *   The game context object
    */
   update(delta, ctx) {}
+
+  /**
+   * The objective interaction.
+   */
+  interact(ctx) {
+    if (this.trigger) {
+      this.alive = false;
+      ctx.level.addScore(this.score);
+    }
+    if (this.load > 0) {
+      ctx.level.load(this.load);
+    }
+  }
+
+  /**
+   * Copy the current objective with the optional modifications.
+   *
+   * @param [Number] x
+   *   The x location to use
+   * @param [Number] y
+   *   The y location to use
+   * @param [Number] height
+   *   The height to use
+   * @param [Number] width
+   *   The width to use
+   * @param [Number] color
+   *   The color to use
+   * @param [Number] score
+   *   The score that this objective is worth
+   * @param [Boolean] trigger
+   *   Wether or not this objective is a trigger
+   * @param [Number] load
+   *   The level to load on collision
+   *
+   * @returns {Objective}
+   *   The new wall copy.
+   */
+  copy(x, y, height, width, color, score, trigger, load) {
+    return new Objective([
+      x || this.x,
+      y || this.y,
+      height || this.height,
+      width || this.width,
+      color || this.color,
+      score || this.score,
+      trigger || this.trigger,
+      load || this.load
+    ]);
+  }
 }

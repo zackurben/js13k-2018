@@ -93,7 +93,16 @@ export default class Player {
       ) {
         // Any player intersections invalidate the move.
         canMove = false;
-      } else if (e instanceof Objective) {
+      } else if (
+        e instanceof Objective &&
+        e.alive &&
+        Physics.intersects(
+          // Shim the point to contain the player dimensions for correct AABB
+          Object.assign({}, point, { height: this.height, width: this.width }),
+          e
+        )
+      ) {
+        e.interact(ctx);
       }
     });
 

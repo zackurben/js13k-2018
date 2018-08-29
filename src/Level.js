@@ -135,4 +135,8 @@ export default class Level {
   getEntities() {
     return this.entities;
   }
+
+  addScore(score) {
+    this.score += score;
+  }
 }

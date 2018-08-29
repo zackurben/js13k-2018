@@ -25,7 +25,8 @@ export default class TestInput {
       new Wall([undefined, undefined, 10, 100]),
       new Wall([undefined, undefined, 100, 10]),
       new Wall([undefined, undefined, 10, 40]),
-      new Wall([undefined, undefined, 40, 10])
+      new Wall([undefined, undefined, 40, 10]),
+      new Objective([undefined, undefined, 40, 40, undefined, 1, true, 2])
     ];
 
     // Currently selected color.
@@ -73,6 +74,7 @@ export default class TestInput {
         case '2':
         case '3':
         case '4':
+        case '5':
           this.entityIndex = parseInt(event.key);
           break;
       }
