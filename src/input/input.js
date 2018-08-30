@@ -20,7 +20,7 @@ export default class Input {
   update(delta, context) {
     context.player.move(
       context,
-      this._getUpdatedPlayerPosition(delta, context.player)
+      this._getUpdatedPlayerPosition(delta, context)
     );
   }
 
@@ -85,11 +85,14 @@ export default class Input {
    * @param {number} delta The time in ms since the last frame.
    * @param {Player} player The player.
    */
-  _getUpdatedPlayerPosition(delta, player) {
+  _getUpdatedPlayerPosition(delta, { player, mapEditor }) {
     const playerPosition = {
       x: player.x,
       y: player.y
     };
+
+    // Disable player input if the map editor is enabled.
+    if (mapEditor.editor) return playerPosition;
 
     const inputState = this._getInputState();
 
