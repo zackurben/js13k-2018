@@ -17,15 +17,34 @@ export default class TestInput {
     this.entities = [];
 
     // The currently selected entity to place.
-    this.entityIndex = 1;
+    this.entityIndex = 0;
+
+    // The currently selected level
+    this.levelId = 1;
 
     // The available entities to use
     this.builderEntities = [
-      new Wall([undefined, undefined, 10, 100]),
-      new Wall([undefined, undefined, 100, 10]),
-      new Wall([undefined, undefined, 10, 40]),
-      new Wall([undefined, undefined, 40, 10]),
-      new Objective([undefined, undefined, 40, 40, undefined, 1, true, 2])
+      [new Wall([undefined, undefined, 10, 100]), 'large horizontal'],
+      [new Wall([undefined, undefined, 100, 10]), 'large vertical'],
+      [new Wall([undefined, undefined, 10, 40]), 'small horizontal'],
+      [new Wall([undefined, undefined, 40, 10]), 'small vertical'],
+      [
+        new Objective([undefined, undefined, 40, 40, undefined, 1, true]),
+        'level objective'
+      ],
+      [
+        new Objective([
+          undefined,
+          undefined,
+          40,
+          40,
+          undefined,
+          1,
+          true,
+          this.levelId + 1
+        ]),
+        'end of level'
+      ]
     ];
 
     // Currently selected color.
@@ -68,8 +87,13 @@ export default class TestInput {
 
     // Place entities in the scene when the editor is active.
     window.onclick = event => {
-      let e = this.builderEntities[this.entityIndex];
+      let [e] = this.builderEntities[this.entityIndex];
       if (this.editor && e) {
+        // Dynamically update the end of level objective
+        if (e instanceof Objective && e.load !== -1) {
+          e.load = this.levelId + 1;
+        }
+
         this.entities.push(
           e.copy(
             parseInt(this.mouse.x / Config.gutter) * Config.gutter,
@@ -115,7 +139,7 @@ export default class TestInput {
     this.entities.forEach(e => e.render({ canvas, ctx, Config }));
 
     if (this.editor) {
-      let e = this.builderEntities[this.entityIndex];
+      let [e, description] = this.builderEntities[this.entityIndex];
       if (e) {
         // Update the temp entities properties.
         e.x = parseInt(this.mouse.x / Config.gutter) * Config.gutter;
@@ -125,6 +149,13 @@ export default class TestInput {
         // Render the temp entity.
         e.render({ canvas, ctx, Config });
       }
+
+      // Debug the entity at the active cursor
+      canvas.font = `20px san-serif`;
+      canvas.fillStyle = 'black';
+      canvas.textAlign = 'left';
+      canvas.textBaseline = 'top';
+      canvas.fillText(`> ${description}`, 0, 20, Config.width);
     }
   }
 
@@ -145,6 +176,11 @@ export default class TestInput {
    * @param {Object} ctx The game context object.
    */
   update(delta, ctx) {
+    // Ensure we memoize the current level for the on-click action
+    if (this.editor) {
+      this.levelId = ctx.level.level;
+    }
+
     // Process at-most 10 keys per frame.
     for (let i = 0; i < 10; i++) {
       let key = this.keys.shift();
@@ -191,7 +227,8 @@ export default class TestInput {
         case 'e':
         case 'r':
         case 't':
-          let i = ['q', 'w', 'e', 'r', 't'].indexOf(key);
+        case 'y':
+          let i = ['q', 'w', 'e', 'r', 't', 'y'].indexOf(key);
           if (i == -1) return;
 
           this.entityIndex = i;
