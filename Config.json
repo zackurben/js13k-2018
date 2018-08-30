@@ -2,5 +2,5 @@
   "height": 500,
   "width": 500,
   "gutter": 10,
-  "debug": true
+  "debug": false
 }
