@@ -1,6 +1,7 @@
 'use strict';
 
 import Wall from './Wall';
+import Objective from './Objective';
 import one from './levels/1';
 import two from './levels/2';
 import three from './levels/3';
@@ -16,19 +17,51 @@ import seven from './levels/7';
  *   The input wall.
  *
  * @returns [Wall]
- *   The walls for the map.
+ *   A wall for the map.
  */
 const toWalls = input => input.map(w => new Wall(w));
 
+/**
+ * Convert the input data into objectives.
+ *
+ * @param {Array} input
+ *   The input objective.
+ *
+ * @returns [Objective]
+ *   An objective for the map.
+ */
+const toObjective = input => input.map(o => new Objective(o));
+
 // The level map.
 const levels = {
-  1: toWalls(one),
-  2: toWalls(two),
-  3: toWalls(three),
-  4: toWalls(four),
-  5: toWalls(five),
-  6: toWalls(six),
-  7: toWalls(seven)
+  1: {
+    w: toWalls(one.w),
+    o: toObjective(one.o)
+  },
+  2: {
+    w: toWalls(two.w),
+    o: toObjective(two.o)
+  },
+  3: {
+    w: toWalls(three.w),
+    o: toObjective(three.o)
+  },
+  4: {
+    w: toWalls(four.w),
+    o: toObjective(four.o)
+  },
+  5: {
+    w: toWalls(five.w),
+    o: toObjective(five.o)
+  },
+  6: {
+    w: toWalls(six.w),
+    o: toObjective(six.o)
+  },
+  7: {
+    w: toWalls(seven.w),
+    o: toObjective(seven.o)
+  }
 };
 
 /**
@@ -37,7 +70,7 @@ const levels = {
 export default class Level {
   constructor() {
     this.level = 1;
-    this.walls = [];
+    this.entities = [];
     this.score = 0;
 
     this.startTime = 0;
@@ -51,7 +84,7 @@ export default class Level {
    *   The game context object
    */
   render({ canvas, Config }) {
-    this.walls.forEach(wall => wall.render({ canvas, Config }));
+    this.entities.forEach(e => e.render({ canvas, Config }));
 
     // Draw the text for the level.
     canvas.font = `40px san-serif`;
@@ -90,7 +123,7 @@ export default class Level {
 
   load(id) {
     this.level = id;
-    this.walls = levels[this.level];
+    this.entities = [].concat(levels[this.level].w, levels[this.level].o);
 
     // Restart the level timer on each level load.
     this.startTime = parseInt(new Date().getTime() / 1000);
@@ -99,7 +132,11 @@ export default class Level {
   /**
    *
    */
-  getWalls() {
-    return this.walls;
+  getEntities() {
+    return this.entities;
+  }
+
+  addScore(score) {
+    this.score += score;
   }
 }

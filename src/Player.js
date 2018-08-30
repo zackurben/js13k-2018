@@ -1,6 +1,8 @@
 'use strict';
 
 import Physics from './Physics';
+import Wall from './Wall';
+import Objective from './Objective';
 
 /**
  * A simple player class.
@@ -80,16 +82,27 @@ export default class Player {
     let canMove = true;
 
     // Check each known wall in the game context and try to invalidate the move.
-    ctx.level.getWalls().forEach(wall => {
+    ctx.level.getEntities().forEach(e => {
       if (
+        e instanceof Wall &&
         Physics.intersects(
           // Shim the point to contain the player dimensions for correct AABB
           Object.assign({}, point, { height: this.height, width: this.width }),
-          wall
+          e
         )
       ) {
         // Any player intersections invalidate the move.
         canMove = false;
+      } else if (
+        e instanceof Objective &&
+        e.alive &&
+        Physics.intersects(
+          // Shim the point to contain the player dimensions for correct AABB
+          Object.assign({}, point, { height: this.height, width: this.width }),
+          e
+        )
+      ) {
+        e.interact(ctx);
       }
     });
 

@@ -1,18 +1,17 @@
 'use strict';
 
-/**
- * A simple wall class that supports collisions.
- */
-export default class Wall {
-  /**
-   * The wall constructor
-   *
-   * Note: This accepts an array of params for smaller map deserialization.
-   *
-   * @param {Array}
-   *   The params to use for this wall
-   */
-  constructor([x, y, height = 10, width = 10, color = 'black']) {
+export default class Objective {
+  constructor([
+    x,
+    y,
+    height = 10,
+    width = 10,
+    color = 'black',
+    score = 0,
+    trigger = true,
+    load = -1
+  ]) {
+    this.alive = true;
     this.x = x;
     this.y = y;
 
@@ -23,6 +22,9 @@ export default class Wall {
     this.halfWidth = this.width / 2;
 
     this.color = color;
+    this.score = score;
+    this.trigger = !!trigger;
+    this.load = load;
   }
 
   /**
@@ -32,9 +34,14 @@ export default class Wall {
    *   The game context object
    */
   render({ canvas, Config }) {
+    if (!this.alive) {
+      return;
+    }
+
     canvas.fillStyle = this.color;
     canvas.fillRect(this.x, this.y, this.width, this.height);
 
+    // If debug is enabled, render the center of the objective and its AABB.
     if (Config.debug) {
       // Debug the center point
       canvas.beginPath();
@@ -68,15 +75,20 @@ export default class Wall {
   update(delta, ctx) {}
 
   /**
-   * Override the toJSON functionality to ensure the json stringify outputs
-   * the brick data into the map format for easy storage.
+   * The objective interaction.
    */
-  toJSON() {
-    return [this.x, this.y, this.height, this.width, this.color];
+  interact(ctx) {
+    if (this.trigger) {
+      this.alive = false;
+      ctx.level.addScore(this.score);
+    }
+    if (this.load > 0) {
+      ctx.level.load(this.load);
+    }
   }
 
   /**
-   * Copy the current wall with the optional modifications.
+   * Copy the current objective with the optional modifications.
    *
    * @param [Number] x
    *   The x location to use
@@ -88,17 +100,26 @@ export default class Wall {
    *   The width to use
    * @param [Number] color
    *   The color to use
+   * @param [Number] score
+   *   The score that this objective is worth
+   * @param [Boolean] trigger
+   *   Wether or not this objective is a trigger
+   * @param [Number] load
+   *   The level to load on collision
    *
-   * @returns {Wall}
+   * @returns {Objective}
    *   The new wall copy.
    */
-  copy(x, y, height, width, color) {
-    return new Wall([
+  copy(x, y, height, width, color, score, trigger, load) {
+    return new Objective([
       x || this.x,
       y || this.y,
       height || this.height,
       width || this.width,
-      color || this.color
+      color || this.color,
+      score || this.score,
+      trigger || this.trigger,
+      load || this.load
     ]);
   }
 }

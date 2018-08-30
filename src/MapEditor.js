@@ -3,6 +3,7 @@
 import Wall from './Wall';
 import Physics from './Physics';
 import Config from '../Config';
+import Objective from './Objective';
 
 export default class TestInput {
   constructor() {
@@ -12,25 +13,26 @@ export default class TestInput {
     // Whether or not we're in the editor mode.
     this.editor = false;
 
-    // The list of temp map bricks.
-    this.bricks = [];
+    // The list of temp map entities.
+    this.entities = [];
 
-    // The currently selected brick to place.
-    this.brickIndex = 1;
+    // The currently selected entity to place.
+    this.entityIndex = 1;
 
-    // The available bricks to use
-    this.builderBricks = [
+    // The available entities to use
+    this.builderEntities = [
       undefined, // Dummy element to fix off by one index.
-      { width: 100, height: 10 },
-      { width: 10, height: 100 },
-      { width: 40, height: 10 },
-      { width: 10, height: 40 }
+      new Wall([undefined, undefined, 10, 100]),
+      new Wall([undefined, undefined, 100, 10]),
+      new Wall([undefined, undefined, 10, 40]),
+      new Wall([undefined, undefined, 40, 10]),
+      new Objective([undefined, undefined, 40, 40, undefined, 1, true, 2])
     ];
 
     // Currently selected color.
     this.colorIndex = 0;
 
-    // The list of available brick colors.
+    // The list of available entity colors.
     this.colors = [
       'black',
       'red',
@@ -56,19 +58,24 @@ export default class TestInput {
 
           if (this.editor) {
             this.syncMap = true;
-          }
-          else {
+          } else {
             this.copyMap = true;
           }
           break;
         case '`':
-          console.log(JSON.stringify(this.bricks));
+          console.log(
+            JSON.stringify({
+              w: this.entities.filter(w => w instanceof Wall),
+              o: this.entities.filter(o => o instanceof Objective)
+            })
+          );
           break;
         case '1':
         case '2':
         case '3':
         case '4':
-          this.brickIndex = parseInt(event.key);
+        case '5':
+          this.entityIndex = parseInt(event.key);
           break;
       }
     };
@@ -91,18 +98,18 @@ export default class TestInput {
       }
     };
 
-    // Place bricks in the scene when the editor is active.
+    // Place entities in the scene when the editor is active.
     window.onclick = event => {
-      let brick = this.builderBricks[this.brickIndex];
-      if (this.editor && brick) {
-        this.bricks.push(
-          new Wall([
+      let e = this.builderEntities[this.entityIndex];
+      if (this.editor && e) {
+        this.entities.push(
+          e.copy(
             parseInt(this.mouse.x / Config.gutter) * Config.gutter,
             parseInt(this.mouse.y / Config.gutter) * Config.gutter,
-            brick.height,
-            brick.width,
+            undefined,
+            undefined,
             this.colors[this.colorIndex]
-          ])
+          )
         );
       }
     };
@@ -110,20 +117,20 @@ export default class TestInput {
     // Remove default browser RMB menu
     window.oncontextmenu = event => event.preventDefault();
 
-    // Check for the mouse down event to remove bricks. This works better than
+    // Check for the mouse down event to remove entities. This works better than
     // oncontextmenu because its the down event vs up.
     window.onmousedown = ({ button }) => {
       // RMB click
       if (this.editor && button === 2) {
-        // Search the list of bricks to check for intersections and remove any
-        // bricks under the mouse location.
-        this.bricks = this.bricks
-          .map((brick, index) => {
-            if (Physics.intersects(this.mouse, brick)) {
+        // Search the list of entities to check for intersections and remove any
+        // entity under the mouse location.
+        this.entities = this.entities
+          .map((e, index) => {
+            if (Physics.intersects(this.mouse, e)) {
               return undefined;
             }
 
-            return brick;
+            return e;
           })
           .filter(item => item !== undefined);
       }
@@ -137,18 +144,18 @@ export default class TestInput {
    *   The game context object
    */
   render({ canvas, ctx, Config }) {
-    this.bricks.forEach(brick => brick.render({ canvas, ctx, Config }));
+    this.entities.forEach(e => e.render({ canvas, ctx, Config }));
 
     if (this.editor) {
-      let brick = this.builderBricks[this.brickIndex];
-      if (brick) {
-        canvas.fillStyle = this.colors[this.colorIndex];
-        canvas.fillRect(
-          parseInt(this.mouse.x / Config.gutter) * Config.gutter,
-          parseInt(this.mouse.y / Config.gutter) * Config.gutter,
-          brick.width,
-          brick.height
-        );
+      let e = this.builderEntities[this.entityIndex];
+      if (e) {
+        // Update the temp entities properties.
+        e.x = parseInt(this.mouse.x / Config.gutter) * Config.gutter;
+        e.y = parseInt(this.mouse.y / Config.gutter) * Config.gutter;
+        e.color = this.colors[this.colorIndex];
+
+        // Render the temp entity.
+        e.render({ canvas, ctx, Config });
       }
     }
   }
@@ -163,13 +170,13 @@ export default class TestInput {
     // If we're syncing, copy the existing map into the editor. Clear the map,
     // So everything is editable.
     if (this.syncMap) {
-      this.bricks = ctx.level.getWalls();
-      ctx.level.walls = [];
+      this.entities = ctx.level.getEntities();
+      ctx.level.entities = [];
       this.syncMap = false;
-    } 
+    }
     // If we're copying the map, re-set the walls in the level to add physics.
     else if (this.copyMap) {
-      ctx.level.walls = this.bricks;
+      ctx.level.entities = this.entities;
       this.copyMap = false;
     }
   }
