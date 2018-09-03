@@ -9,59 +9,108 @@ import four from './levels/4';
 import five from './levels/5';
 import six from './levels/6';
 import seven from './levels/7';
+import Config from '../Config';
+
+// The reverse color map for mapping ints to colors.
+const COLORS = Object.keys(Config.c);
 
 /**
- * Convert the input data into walls.
+ * Coerce the input into a number
  *
- * @param {Array} input
- *   The input wall.
+ * @param {String} input
+ *   The string input
  *
- * @returns [Wall]
- *   A wall for the map.
+ * @returns {Number|undefined}
+ *   The coerced value
  */
-const toWalls = input => input.map(w => new Wall(w));
+const toInt = input => {
+  if (input === undefined) {
+    return undefined;
+  }
+
+  return parseInt(input);
+};
 
 /**
- * Convert the input data into objectives.
+ * Coerce the input into a boolean
  *
- * @param {Array} input
- *   The input objective.
+ * @param {String} input
+ *   The string input
  *
- * @returns [Objective]
- *   An objective for the map.
+ * @returns {Bool|undefined}
+ *   The coerced value
  */
-const toObjective = input => input.map(o => new Objective(o));
+const toBool = input => {
+  if (input === undefined) {
+    return undefined;
+  }
+
+  return toInt(input) === 1 ? true : false;
+};
+
+/**
+ * Convert the string map into its proper entities.
+ *
+ * @param {String} i
+ *   The string map to convert
+ *
+ * @returns {Object}
+ *   The expanded map entities.
+ */
+const parse = i => {
+  let w = [];
+  let o = [];
+
+  // Split on the entity delimiter.
+  i.split(',-1,').forEach(e => {
+    let [
+      type,
+      x,
+      y,
+      height,
+      width,
+      color,
+      score,
+      trigger,
+      load,
+      start
+    ] = e.split(',');
+    type = toInt(type);
+    x = toInt(x) * 10;
+    y = toInt(y) * 10;
+    height = toInt(height) * 10;
+    width = toInt(width) * 10;
+    color = COLORS[toInt(color)];
+    score = toInt(score) * 10;
+    trigger = toBool(trigger);
+    load = toInt(load);
+    start = toBool(start);
+
+    // This is a wall.
+    if (type === 0) {
+      w.push(new Wall([x, y, height, width, color]));
+    } else if (type === 1) {
+      o.push(
+        new Objective([x, y, height, width, color, score, trigger, load, start])
+      );
+    }
+  });
+
+  return {
+    w,
+    o
+  };
+};
 
 // The level map.
 const levels = {
-  1: {
-    w: toWalls(one.w),
-    o: toObjective(one.o)
-  },
-  2: {
-    w: toWalls(two.w),
-    o: toObjective(two.o)
-  },
-  3: {
-    w: toWalls(three.w),
-    o: toObjective(three.o)
-  },
-  4: {
-    w: toWalls(four.w),
-    o: toObjective(four.o)
-  },
-  5: {
-    w: toWalls(five.w),
-    o: toObjective(five.o)
-  },
-  6: {
-    w: toWalls(six.w),
-    o: toObjective(six.o)
-  },
-  7: {
-    w: toWalls(seven.w),
-    o: toObjective(seven.o)
-  }
+  1: parse(one),
+  2: parse(two),
+  3: parse(three),
+  4: parse(four),
+  5: parse(five),
+  6: parse(six),
+  7: parse(seven)
 };
 
 /**

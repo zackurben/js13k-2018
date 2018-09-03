@@ -176,10 +176,7 @@ export default class TestInput {
   printMap(level) {
     console.log(
       `Level: ${level}`,
-      JSON.stringify({
-        w: this.entities.filter(w => w instanceof Wall),
-        o: this.entities.filter(o => o instanceof Objective)
-      })
+      [].concat(this.entities.map(e => e.toJSON()).join(',-1,')).toString()
     );
   }
 

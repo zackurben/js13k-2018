@@ -1,5 +1,7 @@
 'use strict';
 
+import Config from '../Config';
+
 export default class Objective {
   constructor([
     x,
@@ -153,15 +155,16 @@ export default class Objective {
    */
   toJSON() {
     return [
-      this.x,
-      this.y,
-      this.height,
-      this.width,
-      this.color,
-      this.score,
-      this.trigger,
+      1,
+      this.x / 10,
+      this.y / 10,
+      this.height / 10,
+      this.width / 10,
+      Config.c[this.color],
+      this.score / 10,
+      this.trigger === true ? 1 : 0,
       this.load,
-      this.start
+      this.start === true ? 1 : 0
     ];
   }
 }

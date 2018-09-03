@@ -1,5 +1,7 @@
 'use strict';
 
+import Config from '../Config';
+
 /**
  * A simple wall class that supports collisions.
  */
@@ -72,7 +74,14 @@ export default class Wall {
    * the brick data into the map format for easy storage.
    */
   toJSON() {
-    return [this.x, this.y, this.height, this.width, this.color];
+    return [
+      0,
+      this.x / 10,
+      this.y / 10,
+      this.height / 10,
+      this.width / 10,
+      Config.c[this.color]
+    ];
   }
 
   /**
