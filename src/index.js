@@ -41,7 +41,7 @@ let start = 0;
 // The time in ms since the last frame.
 let delta = 0;
 
-ctx.level.load(1);
+ctx.level.load(1, ctx);
 
 /**
  * The primary game loop

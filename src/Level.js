@@ -121,9 +121,16 @@ export default class Level {
     this.time = parseInt(now - this.startTime);
   }
 
-  load(id) {
+  load(id, ctx) {
     this.level = id;
     this.entities = [].concat(levels[this.level].w, levels[this.level].o);
+
+    let start = this.entities
+      .filter(e => e.hasOwnProperty('start') && e.start)
+      .shift();
+    if (start) {
+      ctx.player.move(ctx, start);
+    }
 
     // Restart the level timer on each level load.
     this.startTime = parseInt(new Date().getTime() / 1000);
