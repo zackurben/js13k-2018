@@ -33,7 +33,7 @@ const ctx = {
 };
 
 // The list of enumerated entities in the game.
-let entities = [ctx.player, ctx.input, ctx.mapEditor, ctx.level];
+let entities = [ctx.input, ctx.mapEditor, ctx.level, ctx.player];
 
 // The time in ms since the start of this game.
 let start = 0;

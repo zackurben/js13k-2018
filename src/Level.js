@@ -129,7 +129,13 @@ export default class Level {
       .filter(e => e.hasOwnProperty('start') && e.start)
       .shift();
     if (start) {
-      ctx.player.move(ctx, start);
+      // Spawn the player in the center of the tile.
+      let origin = {
+        x: start.x + parseInt((start.width - ctx.player.width) / 2),
+        y: start.y + parseInt((start.height - ctx.player.height) / 2)
+      };
+
+      ctx.player.move(ctx, origin);
     }
 
     // Restart the level timer on each level load.

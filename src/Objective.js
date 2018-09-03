@@ -146,4 +146,22 @@ export default class Objective {
       start || this.start
     ]);
   }
+
+  /**
+   * Override the toJSON functionality to ensure the json stringify outputs
+   * the objective data into the map format for easy storage.
+   */
+  toJSON() {
+    return [
+      this.x,
+      this.y,
+      this.height,
+      this.width,
+      this.color,
+      this.score,
+      this.trigger,
+      this.load,
+      this.start
+    ];
+  }
 }

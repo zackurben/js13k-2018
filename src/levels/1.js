@@ -24,5 +24,5 @@ export default {
     [0, 50, 100, 10, 'black'],
     [380, 870, 100, 10, 'black']
   ],
-  o: []
+  o: [[10, 50, 20, 20, 'green', 0, false, -1, true]]
 };
