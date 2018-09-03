@@ -29,7 +29,7 @@ export default class TestInput {
       [new Wall([undefined, undefined, 10, 40]), 'small horizontal'],
       [new Wall([undefined, undefined, 40, 10]), 'small vertical'],
       [
-        new Objective([undefined, undefined, 40, 40, undefined, 1, true]),
+        new Objective([undefined, undefined, 10, 10, undefined, 1, true]),
         'level objective'
       ],
       [
@@ -50,8 +50,8 @@ export default class TestInput {
         new Objective([
           undefined,
           undefined,
-          40,
-          40,
+          20,
+          20,
           undefined,
           1,
           true,
