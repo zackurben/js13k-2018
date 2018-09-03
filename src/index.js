@@ -1,6 +1,5 @@
 'use strict';
 
-import '../index.css';
 import Config from '../Config';
 import Input from './input/input';
 import Player from './Player';
