@@ -6,29 +6,27 @@
   "dependencies": {},
   "devDependencies": {
     "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.4",
+    "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.7.0",
     "clean-webpack-plugin": "^0.1.19",
     "concurrently": "^3.6.1",
     "css-loader": "^1.0.0",
     "html-webpack-plugin": "^3.2.0",
-    "jest": "^22.4.3",
+    "jest": "^22.4.4",
     "localtunnel": "^1.9.0",
-    "prettier": "^1.12.1",
+    "prettier": "^1.14.2",
     "style-loader": "^0.22.1",
-    "webpack": "^4.8.3",
-    "webpack-cli": "^2.1.3",
-    "webpack-dev-server": "^3.1.4"
+    "webpack": "^4.17.1",
+    "webpack-cli": "^2.1.5",
+    "webpack-dev-server": "^3.1.7"
   },
   "scripts": {
-    "dev-server":
-      "webpack-dev-server --config webpack.config.js --public https://js13k.localtunnel.me --port 9891 --open",
+    "dev-server": "webpack-dev-server --config webpack.config.js --public https://js13k.localtunnel.me --port 9891 --open",
     "lint": "prettier src/**/*.js --write",
     "test": "jest",
     "watch": "webpack --progress --watch",
-    "start":
-      "concurrently --kill-others --names 'localtunnel,webpack dev-server' --prefix-colors 'magenta,cyan' 'npm run mobile' 'npm run dev-server'",
-    "build": "webpack",
+    "start": "concurrently --kill-others --names 'localtunnel,webpack dev-server' --prefix-colors 'magenta,cyan' 'npm run mobile' 'npm run dev-server'",
+    "build": "webpack --mode=production",
     "mobile": "lt --port 9891 --subdomain js13k"
   },
   "author": "Zack Urben <zackurben@gmail.com> (http://zackurben.com)",
