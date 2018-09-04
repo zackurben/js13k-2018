@@ -3,7 +3,7 @@
 import Config from '../Config';
 
 export default class Objective {
-  constructor([
+  constructor(
     x,
     y,
     height = 10,
@@ -13,7 +13,7 @@ export default class Objective {
     trigger = true,
     load = -1,
     start = false
-  ]) {
+  ) {
     this.alive = true;
     this.x = x;
     this.y = y;
@@ -136,7 +136,7 @@ export default class Objective {
    *   The new Objective copy.
    */
   copy(x, y, height, width, color, score, trigger, load, start) {
-    return new Objective([
+    return new Objective(
       x || this.x,
       y || this.y,
       height || this.height,
@@ -146,7 +146,7 @@ export default class Objective {
       trigger || this.trigger,
       load || this.load,
       start || this.start
-    ]);
+    );
   }
 
   /**

@@ -6,11 +6,10 @@ import Input from './input/input';
 import Player from './Player';
 import Level from './Level';
 
-const MapEditor = undefined;
+let MapEditor = undefined;
 try {
-  MapEditor = require('./MapEditor');
-}
-catch(e){}
+  MapEditor = require('./MapEditor').default;
+} catch (e) {}
 
 /**
  * Get a new canvas context for rendering.

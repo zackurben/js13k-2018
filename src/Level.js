@@ -88,10 +88,10 @@ const parse = i => {
 
     // This is a wall.
     if (type === 0) {
-      w.push(new Wall([x, y, height, width, color]));
+      w.push(new Wall(x, y, height, width, color));
     } else if (type === 1) {
       o.push(
-        new Objective([x, y, height, width, color, score, trigger, load, start])
+        new Objective(x, y, height, width, color, score, trigger, load, start)
       );
     }
   });

@@ -5,7 +5,7 @@ import Physics from './Physics';
 import Config from '../Config';
 import Objective from './Objective';
 
-export default class TestInput {
+export default class MapEditor {
   constructor() {
     // Temporary mouse location
     this.mouse = { x: 0, y: 0 };
@@ -24,16 +24,16 @@ export default class TestInput {
 
     // The available entities to use
     this.builderEntities = [
-      [new Wall([undefined, undefined, 10, 100]), 'large horizontal'],
-      [new Wall([undefined, undefined, 100, 10]), 'large vertical'],
-      [new Wall([undefined, undefined, 10, 40]), 'small horizontal'],
-      [new Wall([undefined, undefined, 40, 10]), 'small vertical'],
+      [new Wall(undefined, undefined, 10, 100), 'large horizontal'],
+      [new Wall(undefined, undefined, 100, 10), 'large vertical'],
+      [new Wall(undefined, undefined, 10, 40), 'small horizontal'],
+      [new Wall(undefined, undefined, 40, 10), 'small vertical'],
       [
-        new Objective([undefined, undefined, 10, 10, undefined, 1, true]),
+        new Objective(undefined, undefined, 10, 10, undefined, 1, true),
         'level objective'
       ],
       [
-        new Objective([
+        new Objective(
           undefined,
           undefined,
           20,
@@ -43,11 +43,11 @@ export default class TestInput {
           false,
           undefined,
           true
-        ]),
+        ),
         'start of level'
       ],
       [
-        new Objective([
+        new Objective(
           undefined,
           undefined,
           20,
@@ -56,7 +56,7 @@ export default class TestInput {
           1,
           true,
           this.levelId + 1
-        ]),
+        ),
         'end of level'
       ]
     ];

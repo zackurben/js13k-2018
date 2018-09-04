@@ -14,7 +14,7 @@ export default class Wall {
    * @param {Array}
    *   The params to use for this wall
    */
-  constructor([x, y, height = 10, width = 10, color = 'black']) {
+  constructor(x, y, height = 10, width = 10, color = 'black') {
     this.x = x;
     this.y = y;
 
@@ -102,12 +102,12 @@ export default class Wall {
    *   The new wall copy.
    */
   copy(x, y, height, width, color) {
-    return new Wall([
+    return new Wall(
       x || this.x,
       y || this.y,
       height || this.height,
       width || this.width,
       color || this.color
-    ]);
+    );
   }
 }
