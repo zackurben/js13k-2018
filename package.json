@@ -30,6 +30,7 @@
   },
   "scripts": {
     "dev-server": "webpack-dev-server --config webpack.dev.js --public https://js13k.localtunnel.me --port 9891 --open",
+    "prod-server": "webpack-dev-server --config webpack.prod.js --public https://js13k.localtunnel.me --port 9891 --open",
     "lint": "prettier {**,src/**/*}.js --write",
     "lint-build": "prettier dist/*.js --write",
     "test": "jest",
