@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const path = require('path');
 const clean = require('clean-webpack-plugin');
 const html = require('html-webpack-plugin');
@@ -28,13 +29,13 @@ module.exports = merge(common, {
         assetNameRegExp: /\.css$/i,
         cssProcessor: require('cssnano'),
         cssProcessorPluginOptions: {
-          preset: ['default', { discardComments: { removeAll: true } }],
+          preset: ['default', { discardComments: { removeAll: true } }]
         },
         canPrint: true
       })
     ]
   },
-  plugins: [new MiniCssExtractPlugin()],
+  plugins: [new MiniCssExtractPlugin(), new webpack.IgnorePlugin(/MapEditor/)],
   module: {
     rules: [
       {

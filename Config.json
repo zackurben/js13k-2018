@@ -3,6 +3,7 @@
   "width": 500,
   "gutter": 5,
   "debug": false,
+  "b": false,
   "c": {
     "black": 0,
     "red": 1,

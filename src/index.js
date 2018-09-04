@@ -4,8 +4,13 @@ import '../index.css';
 import Config from '../Config';
 import Input from './input/input';
 import Player from './Player';
-import MapEditor from './MapEditor';
 import Level from './Level';
+
+const MapEditor = undefined;
+try {
+  MapEditor = require('./MapEditor');
+}
+catch(e){}
 
 /**
  * Get a new canvas context for rendering.
@@ -27,13 +32,16 @@ const ctx = {
   canvas: getCanvas(),
   player: new Player(),
   input: new Input(),
-  mapEditor: new MapEditor(),
   Config,
   level: new Level()
 };
 
 // The list of enumerated entities in the game.
-let entities = [ctx.input, ctx.mapEditor, ctx.level, ctx.player];
+let entities = [ctx.input, ctx.level, ctx.player];
+if (Config.b) {
+  ctx.mapEditor = new MapEditor();
+  entities.push(ctx.mapEditor);
+}
 
 // The time in ms since the start of this game.
 let start = 0;
