@@ -29,15 +29,29 @@ export default class TestInput {
       [new Wall([undefined, undefined, 10, 40]), 'small horizontal'],
       [new Wall([undefined, undefined, 40, 10]), 'small vertical'],
       [
-        new Objective([undefined, undefined, 40, 40, undefined, 1, true]),
+        new Objective([undefined, undefined, 10, 10, undefined, 1, true]),
         'level objective'
       ],
       [
         new Objective([
           undefined,
           undefined,
-          40,
-          40,
+          20,
+          20,
+          undefined,
+          0,
+          false,
+          undefined,
+          true
+        ]),
+        'start of level'
+      ],
+      [
+        new Objective([
+          undefined,
+          undefined,
+          20,
+          20,
           undefined,
           1,
           true,
@@ -220,7 +234,7 @@ export default class TestInput {
 
           // Always print the current map before switching levels.
           this.printMap(ctx.level.level);
-          ctx.level.load(parseInt(key));
+          ctx.level.load(parseInt(key), ctx);
           break;
         case 'q':
         case 'w':
@@ -228,7 +242,8 @@ export default class TestInput {
         case 'r':
         case 't':
         case 'y':
-          let i = ['q', 'w', 'e', 'r', 't', 'y'].indexOf(key);
+        case 'u':
+          let i = ['q', 'w', 'e', 'r', 't', 'y', 'u'].indexOf(key);
           if (i == -1) return;
 
           this.entityIndex = i;
