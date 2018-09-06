@@ -1,5 +1,7 @@
 'use strict';
 
+import Config from '../Config';
+
 /**
  * A simple wall class that supports collisions.
  */
@@ -12,7 +14,7 @@ export default class Wall {
    * @param {Array}
    *   The params to use for this wall
    */
-  constructor([x, y, height = 10, width = 10, color = 'black']) {
+  constructor(x, y, height = 10, width = 10, color = 'black') {
     this.x = x;
     this.y = y;
 
@@ -72,7 +74,14 @@ export default class Wall {
    * the brick data into the map format for easy storage.
    */
   toJSON() {
-    return [this.x, this.y, this.height, this.width, this.color];
+    return [
+      0,
+      this.x / 10,
+      this.y / 10,
+      this.height / 10,
+      this.width / 10,
+      Config.c[this.color]
+    ];
   }
 
   /**
@@ -93,12 +102,12 @@ export default class Wall {
    *   The new wall copy.
    */
   copy(x, y, height, width, color) {
-    return new Wall([
+    return new Wall(
       x || this.x,
       y || this.y,
       height || this.height,
       width || this.width,
       color || this.color
-    ]);
+    );
   }
 }

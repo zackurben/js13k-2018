@@ -6,10 +6,14 @@ import '../index.css';
 import Config from '../Config';
 import Input from './input/input';
 import Player from './Player';
-import MapEditor from './MapEditor';
 import Level from './Level';
 import DataDisplay from './data/data-display';
 import Color from './color/color';
+
+let MapEditor = undefined;
+try {
+  MapEditor = require('./MapEditor').default;
+} catch (e) {}
 
 /**
  * Get a new canvas context for rendering.
@@ -59,7 +63,6 @@ const ctx = {
   canvas: getCanvas(),
   player: new Player(),
   input: new Input(),
-  mapEditor: new MapEditor(),
   Config,
   level: new Level(),
   dataDisplay: new DataDisplay(getDataDisplayMap()),
@@ -67,7 +70,11 @@ const ctx = {
 };
 
 // The list of enumerated entities in the game.
-let entities = [ctx.player, ctx.input, ctx.mapEditor, ctx.level];
+let entities = [ctx.input, ctx.level, ctx.player];
+if (Config.b) {
+  ctx.mapEditor = new MapEditor();
+  entities.push(ctx.mapEditor);
+}
 
 // The time in ms since the start of this game.
 let start = 0;
@@ -75,7 +82,7 @@ let start = 0;
 // The time in ms since the last frame.
 let delta = 0;
 
-ctx.level.load(1);
+ctx.level.load(1, ctx);
 
 /**
  * The primary game loop

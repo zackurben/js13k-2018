@@ -1,28 +1,17 @@
 const path = require('path');
 const clean = require('clean-webpack-plugin');
 const html = require('html-webpack-plugin');
+const common = require('./webpack.common');
+const merge = require('webpack-merge');
 
-module.exports = {
+module.exports = merge(common, {
   mode: 'development',
-  entry: './src/index.js',
-  output: {
-    filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: '/'
-  },
   devtool: 'inline-source-map',
   devServer: {
     contentBase: path.resolve(__dirname, 'dist'),
     historyApiFallback: true,
     disableHostCheck: true
   },
-  plugins: [
-    new clean(['dist']),
-    new html({
-      filename: path.resolve(__dirname, 'dist/index.html'),
-      template: 'index.html'
-    })
-  ],
   module: {
     rules: [
       {
@@ -31,14 +20,15 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['env']
+            presets: ['@babel/preset-env'],
+            plugins: ['@babel/plugin-transform-runtime']
           }
         }
       },
       {
         test: /\.css$/,
-        use: [ 'style-loader', 'css-loader' ]
+        use: ['style-loader', 'css-loader']
       }
     ]
   }
-};
+});

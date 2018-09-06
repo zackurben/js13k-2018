@@ -1,7 +1,9 @@
 'use strict';
 
+import Config from '../Config';
+
 export default class Objective {
-  constructor([
+  constructor(
     x,
     y,
     height = 10,
@@ -9,8 +11,9 @@ export default class Objective {
     color = 'black',
     score = 0,
     trigger = true,
-    load = -1
-  ]) {
+    load = -1,
+    start = false
+  ) {
     this.alive = true;
     this.x = x;
     this.y = y;
@@ -25,6 +28,8 @@ export default class Objective {
     this.score = score;
     this.trigger = !!trigger;
     this.load = load;
+
+    this.start = start;
   }
 
   /**
@@ -43,24 +48,42 @@ export default class Objective {
 
     // If debug is enabled, render the center of the objective and its AABB.
     if (Config.debug) {
-      // Debug the center point
-      canvas.beginPath();
-      canvas.fillStyle = 'green';
-      canvas.arc(
-        this.x + this.halfWidth,
-        this.y + this.halfHeight,
-        4,
-        0,
-        Math.PI * 2
-      );
-      canvas.fill();
-      canvas.closePath();
+      if (this.start !== true) {
+        // Debug the center point
+        canvas.beginPath();
+        canvas.fillStyle = 'green';
+        canvas.arc(
+          this.x + this.halfWidth,
+          this.y + this.halfHeight,
+          4,
+          0,
+          Math.PI * 2
+        );
+        canvas.fill();
+        canvas.closePath();
 
-      // Debug the aabb collision box
-      canvas.beginPath();
-      canvas.strokeStyle = 'red';
-      canvas.strokeRect(this.x, this.y, this.width, this.height);
-      canvas.closePath();
+        // Debug the aabb collision box
+        canvas.beginPath();
+        canvas.strokeStyle = 'red';
+        canvas.strokeRect(this.x, this.y, this.width, this.height);
+        canvas.closePath();
+      } else {
+        // Debug the start objective with a purple x
+        canvas.strokeStyle = 'purple';
+        canvas.beginPath();
+        canvas.moveTo(this.x, this.y);
+        canvas.lineTo(this.x + this.width, this.y + this.height);
+        canvas.stroke();
+        canvas.moveTo(this.x + this.width, this.y);
+        canvas.lineTo(this.x, this.y + this.height);
+        canvas.stroke();
+        canvas.closePath();
+
+        // Debug the aabb collision box
+        canvas.beginPath();
+        canvas.strokeRect(this.x, this.y, this.width, this.height);
+        canvas.closePath();
+      }
     }
   }
 
@@ -83,7 +106,7 @@ export default class Objective {
       ctx.level.addScore(this.score);
     }
     if (this.load > 0) {
-      ctx.level.load(this.load);
+      ctx.level.load(this.load, ctx);
     }
   }
 
@@ -106,12 +129,14 @@ export default class Objective {
    *   Wether or not this objective is a trigger
    * @param [Number] load
    *   The level to load on collision
+   * @param [Boolean] start
+   *   Wether or not this is the start tile.
    *
    * @returns {Objective}
-   *   The new wall copy.
+   *   The new Objective copy.
    */
-  copy(x, y, height, width, color, score, trigger, load) {
-    return new Objective([
+  copy(x, y, height, width, color, score, trigger, load, start) {
+    return new Objective(
       x || this.x,
       y || this.y,
       height || this.height,
@@ -119,7 +144,27 @@ export default class Objective {
       color || this.color,
       score || this.score,
       trigger || this.trigger,
-      load || this.load
-    ]);
+      load || this.load,
+      start || this.start
+    );
+  }
+
+  /**
+   * Override the toJSON functionality to ensure the json stringify outputs
+   * the objective data into the map format for easy storage.
+   */
+  toJSON() {
+    return [
+      1,
+      this.x / 10,
+      this.y / 10,
+      this.height / 10,
+      this.width / 10,
+      Config.c[this.color],
+      this.score / 10,
+      this.trigger === true ? 1 : 0,
+      this.load,
+      this.start === true ? 1 : 0
+    ];
   }
 }
