@@ -83,29 +83,14 @@ export default class Level {
    * @param {Object} ctx
    *   The game context object
    */
-  render({ canvas, Config }) {
-    this.entities.forEach(e => e.render({ canvas, Config }));
+  render(ctx) {
+    this.entities.forEach(e =>
+      e.render({ canvas: ctx.canvas, Config: ctx.Config })
+    );
 
-    // Draw the text for the level.
-    canvas.font = `40px san-serif`;
-    canvas.fillStyle = 'black';
-    canvas.textAlign = 'center';
-    canvas.textBaseline = 'top';
-    canvas.fillText(`Level ${this.level}`, 250, 0, Config.width);
-
-    // Draw the text for the score.
-    canvas.font = `20px san-serif`;
-    canvas.fillStyle = 'black';
-    canvas.textAlign = 'left';
-    canvas.textBaseline = 'top';
-    canvas.fillText(`Score: ${this.score}`, 0, 0, Config.width);
-
-    // Draw the text for the time.
-    canvas.font = `20px san-serif`;
-    canvas.fillStyle = 'black';
-    canvas.textAlign = 'right';
-    canvas.textBaseline = 'top';
-    canvas.fillText(`Time: ${this.time}`, Config.width, 0, Config.width);
+    ctx.dataDisplay.updateDisplayNode('level', this.level);
+    ctx.dataDisplay.updateDisplayNode('score', this.score);
+    ctx.dataDisplay.updateDisplayNode('time', this.time);
   }
 
   /**
