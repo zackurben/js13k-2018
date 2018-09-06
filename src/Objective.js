@@ -1,7 +1,9 @@
 'use strict';
 
+import Config from '../Config';
+
 export default class Objective {
-  constructor([
+  constructor(
     x,
     y,
     height = 10,
@@ -11,7 +13,7 @@ export default class Objective {
     trigger = true,
     load = -1,
     start = false
-  ]) {
+  ) {
     this.alive = true;
     this.x = x;
     this.y = y;
@@ -134,7 +136,7 @@ export default class Objective {
    *   The new Objective copy.
    */
   copy(x, y, height, width, color, score, trigger, load, start) {
-    return new Objective([
+    return new Objective(
       x || this.x,
       y || this.y,
       height || this.height,
@@ -144,7 +146,7 @@ export default class Objective {
       trigger || this.trigger,
       load || this.load,
       start || this.start
-    ]);
+    );
   }
 
   /**
@@ -153,15 +155,16 @@ export default class Objective {
    */
   toJSON() {
     return [
-      this.x,
-      this.y,
-      this.height,
-      this.width,
-      this.color,
-      this.score,
-      this.trigger,
+      1,
+      this.x / 10,
+      this.y / 10,
+      this.height / 10,
+      this.width / 10,
+      Config.c[this.color],
+      this.score / 10,
+      this.trigger === true ? 1 : 0,
       this.load,
-      this.start
+      this.start === true ? 1 : 0
     ];
   }
 }
