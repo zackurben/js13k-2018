@@ -1,61 +1,15 @@
-:root {
-  --color-accent: #e953a9;
-  --color-background-desktop: #271433;
-  --color-background-mobile: #e953a9;
-  --color-data-desktop: #817be2;
-  --color-data-mobile: #413f5c;
-  --color-game-area: #413f5c;
-
-  --font-mono: monospace;
-  --font-sans: 'Helvetica Nueue', Helvetica, Aral, sans-serif;
-
-  --margin-header-mobile: 50px;
-
-  --screen-large: 960px;
-}
-
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-}
-
-html,
 body {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
+  padding-top: 50px;
+
+  background: var(--color-background-bright);
 }
 
-body {
-  padding-top: var(--margin-header-mobile);
-
-  background: var(--color-background-mobile);
-}
-
-@media (min-width: 960px) {
+@media (min-width: 1200px) {
   body {
     padding-bottom: 20px;
     padding-top: 20px;
 
-    background: var(--color-background-desktop);
-  }
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-  font-family: var(--font-sans);
-}
-
-@media (max-width: 960px) {
-  .desktop-only {
-    display: none;
+    background: var(--color-background-darker);
   }
 }
 
@@ -66,16 +20,16 @@ p {
   width: 100%;
   padding: 20px 5px;
 
-  background: var(--color-game-area);
+  background: var(--color-background-dark);
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
 
-@media (min-width: 960px) {
+@media (min-width: 1200px) {
   .game-area {
     margin: 0 auto;
     padding: 20px;
-    width: 960px;
+    width: 1200px;
 
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -94,7 +48,7 @@ p {
   display: block;
   margin: 0 auto;
 
-  background: var(--color-background-desktop);
+  background: var(--color-background-darker);
   border-radius: 10px;
 }
 
@@ -108,17 +62,17 @@ p {
   flex-direction: row;
   justify-content: space-evenly;
 
-  color: var(--color-data-mobile);
+  color: var(--color-text-dark);
 }
 
-@media (min-width: 960px) {
+@media (min-width: 1200px) {
   .game-area__data {
     position: relative;
     top: 0;
     margin-top: 0;
     margin-bottom: 20px;
 
-    color: var(--color-data-desktop);
+    color: var(--color-text-bright);
   }
 }
 
@@ -138,10 +92,10 @@ p {
   margin-top: 20px;
   padding: 10px 40px;
 
-  background: var(--color-accent);
+  background: var(--color-accent-primary);
   border: none;
   border-radius: 10px;
-  color: var(--color-game-area);
+  color: var(--color-background-dark);
   font-size: 24px;
   font-weight: bold;
 }
