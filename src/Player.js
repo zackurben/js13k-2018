@@ -32,8 +32,8 @@ export default class Player {
    * @param {Object} ctx
    *   The game context object
    */
-  render({ canvas, Config }) {
-    canvas.fillStyle = 'rgba(0, 0, 0, 1)';
+  render({ canvas, color, Config }) {
+    canvas.fillStyle = color.getColor('accent-secondary');
     canvas.fillRect(this.x, this.y, this.width, this.height);
 
     // If debug is enabled, render the center point of the player and its AABB.

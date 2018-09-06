@@ -5,7 +5,7 @@
   "debug": false,
   "b": true,
   "c": {
-    "black": 0,
+    "#E953A9": 0,
     "red": 1,
     "orange": 2,
     "yellow": 3,

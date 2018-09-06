@@ -1,0 +1,14 @@
+:root {
+  --color-accent-primary: #e953a9;
+  --color-accent-secondary: #4b9f58;
+
+  --color-background-darker: #271433;
+  --color-background-dark: #413f5c;
+  --color-background-bright: #e953a9;
+
+  --color-text-dark: #413f5c;
+  --color-text-bright: #817be2;
+
+  --font-mono: monospace;
+  --font-sans: 'Helvetica Nueue', Helvetica, Arial, sans-serif;
+}

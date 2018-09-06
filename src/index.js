@@ -1,10 +1,14 @@
 'use strict';
 
+import '../variables.css';
+import '../reset.css';
 import '../index.css';
 import Config from '../Config';
 import Input from './input/input';
 import Player from './Player';
 import Level from './Level';
+import DataDisplay from './data/data-display';
+import Color from './color/color';
 
 let MapEditor = undefined;
 try {
@@ -18,11 +22,39 @@ try {
  *   The canvas context.
  */
 const getCanvas = () => {
-  const html = document.createElement('canvas');
-  html.height = Config.height;
-  html.width = Config.width;
-  document.body.appendChild(html);
-  return html.getContext('2d');
+  const container = document.getElementById('canvas-container');
+
+  const canvas = document.createElement('canvas');
+  canvas.id = 'canvas';
+  const canvas2dContext = canvas.getContext('2d');
+
+  _mutateCanvasSizeAndScalingOnWindowResize(
+    canvas,
+    canvas2dContext,
+    container,
+    Config.width
+  );
+
+  window.addEventListener('resize', () => {
+    _mutateCanvasSizeAndScalingOnWindowResize(
+      canvas,
+      canvas2dContext,
+      container,
+      Config.width
+    );
+  });
+
+  container.appendChild(canvas);
+
+  return canvas2dContext;
+};
+
+const getDataDisplayMap = () => {
+  return {
+    level: document.getElementById('level'),
+    score: document.getElementById('score'),
+    time: document.getElementById('time')
+  };
 };
 
 // The game context. Passed to each entity on update and render to make internal
@@ -32,7 +64,9 @@ const ctx = {
   player: new Player(),
   input: new Input(),
   Config,
-  level: new Level()
+  level: new Level(),
+  dataDisplay: new DataDisplay(getDataDisplayMap()),
+  color: new Color()
 };
 
 // The list of enumerated entities in the game.
@@ -82,3 +116,30 @@ let update = timestamp => {
 
 // Start the game.
 update();
+
+/**
+ * Mutate the canvas size and scaling on window resize.
+ *
+ * @param {HTMLCanvasElement} canvas The canvas element.
+ * @param {CanvasRenderingContext2D} canvas2dContext The 2D rendering context of the canvas.
+ * @param {HTMLElement} canvasContainer The containing element for the canvas.
+ * @param {number} scalingBase Base edge dimension of the canvas.
+ */
+function _mutateCanvasSizeAndScalingOnWindowResize(
+  canvas,
+  canvas2dContext,
+  canvasContainer,
+  scalingBase
+) {
+  // Get the minimum dimension of the canvas container (in order to keep the square aspect ratio).
+  const minDimension = Math.min(
+    canvasContainer.offsetHeight,
+    canvasContainer.offsetWidth
+  );
+  const scalingFactor = minDimension / scalingBase;
+
+  canvas.height = minDimension;
+  canvas.width = minDimension;
+
+  canvas2dContext.scale(scalingFactor, scalingFactor);
+}
