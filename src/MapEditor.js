@@ -78,6 +78,48 @@ export default class MapEditor {
 
     this.keys = [];
 
+    // Allow users to change the rand seed for difficulty change.
+    this.rand = 100;
+
+    /**
+     * Generate a map using prims algorithm.
+     */
+    this.generate = () => {
+      let weights = {};
+
+      // Generate the map bounds
+      let map = [
+        // Top wall
+        new Wall(0, 0, Config.wall, Config.width),
+
+        // Bottom wall
+        new Wall(0, Config.height - Config.wall, Config.wall, Config.width),
+
+        // Left wall
+        new Wall(0, Config.wall, Config.height - Config.wall * 2, Config.wall),
+
+        // Right wall
+        new Wall(
+          Config.width - Config.wall,
+          Config.wall,
+          Config.height - Config.wall * 2,
+          Config.wall
+        )
+      ];
+
+      // Assign random weights to each node
+      let countX = Config.width / Config.wall;
+      let countY = Config.height / Config.wall;
+      for (let x = 0; x < countX; x++) {
+        for (let y = 0; y < countY; y++) {
+          weights[`${x},${y}`] = parseInt(Math.random(1) * this.rand);
+        }
+      }
+
+      console.log(weights);
+      return map;
+    };
+
     // On keydown, process simple input events.
     window.onkeydown = event => this.keys.push(event.key);
 
@@ -249,6 +291,12 @@ export default class MapEditor {
           if (i == -1) return;
 
           this.entityIndex = i;
+          break;
+        case 'p':
+          if (!this.editor) return;
+
+          this.entities = this.generate();
+          ctx.level.entities = this.entities;
           break;
       }
     }
