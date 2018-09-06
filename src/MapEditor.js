@@ -69,8 +69,13 @@ export default class TestInput {
 
     // Update the mouse location on each move, for use in the editor.
     window.onmousemove = ({ clientX, clientY }) => {
-      this.mouse.x = clientX;
-      this.mouse.y = clientY;
+      // TODO: This should really be passed in instead of being recalculated, but, this isn't part of the game, so more of a nice stretch goal.
+      const canvas = document.getElementById('canvas');
+      const { left, top } = canvas.getBoundingClientRect();
+      const scalingFactor = canvas.width / Config.width;
+
+      this.mouse.x = (clientX - left) / scalingFactor;
+      this.mouse.y = (clientY - top) / scalingFactor;
     };
 
     // Change the selected color index for the editor on scroll wheel.
