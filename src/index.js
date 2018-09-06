@@ -49,6 +49,11 @@ const getCanvas = () => {
   return canvas2dContext;
 };
 
+/**
+ * Provides the map of data DOM elements.
+ *
+ * @returns {Object} Map of data DOM elements.
+ */
 const getDataDisplayMap = () => {
   return {
     level: document.getElementById('level'),
