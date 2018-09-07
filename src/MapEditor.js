@@ -85,8 +85,6 @@ export default class MapEditor {
      * Generate a map using prims algorithm.
      */
     this.generate = () => {
-      let weights = {};
-
       // Generate the map bounds
       let map = [
         // Top wall
@@ -107,7 +105,8 @@ export default class MapEditor {
         )
       ];
 
-      // Assign random weights to each node
+      // Assign random weights to each node, to use with prims.
+      let weights = {};
       let countX = Config.width / Config.wall - 1;
       let countY = Config.height / Config.wall - 1;
       for (let x = 1; x < countX; x++) {
@@ -116,11 +115,25 @@ export default class MapEditor {
         }
       }
 
+      // Start the maze generation from the center most-ish node.
+      const mid = parseInt(Object.keys(weights).length / 2);
+      const startNode = Object.keys(weights)[mid];
+      
+      // Track the final list of visited nodes.
       let visited = [];
+
+      /**
+       * Get the shortest path to the 4 straight adjacent nodes.
+       * 
+       * @param {String} node
+       *   The nodes location `x,y`
+       */
       const getMin = node => {
         let [x, y] = node.split(',');
         let min = this.rand;
         let index = -1;
+
+        // The possible adjacent nodes.
         let next = [
           `${x},${parseInt(y) - 1}`, // top
           `${parseInt(x) + 1},${y}`, // right
@@ -128,14 +141,16 @@ export default class MapEditor {
           `${parseInt(x) - 1},${y}` // left
         ];
 
+        // Remove any undefined and previously visited nodes
         let filtered = next.filter(tile => {
-          if (!weights.hasOwnProperty(tile) || visited.indexOf(node) !== -1) {
+          if (!weights.hasOwnProperty(tile) || visited.indexOf(tile) !== -1) {
             return false;
           }
 
           return true;
         });
 
+        // Determine which node has the shortest path
         filtered.forEach(tile => {
           if (weights[tile] < min) {
             min = weights[tile];
@@ -143,37 +158,60 @@ export default class MapEditor {
           }
         });
 
-        if (index === -1) {
-          console.log(node, next, filtered);
-          console.log(weights);
-        }
-
+        // Return the `x,y` node location for the shortest path. 
         return index;
       };
 
-      Object.keys(weights).forEach(node => {
-        let min = getMin(node);
-        if (min === -1) {
-          return;
+      /**
+       * Recursively find the next node in the list using prims algorithm.
+       * 
+       * @param {String} node
+       *   The current node being traversed.
+       * @param {Array} list 
+       *   The list of previously visited nodes, which may have more paths.
+       */
+      const findNext = (node, list = []) => {
+        if (!node) return;
+
+        // Update the traversal list.
+        visited.push(node);
+        
+        
+        // Determine the travel direction
+        let next = getMin(node);
+        if (next === -1) {
+          next = list.pop();
+          while (next !== undefined && getMin(next) === -1) {
+            next = list.pop();
+          }
+
+          // If there are no more nodes in the list, we are done?
+          if (next === undefined) return;
         }
 
-        visited.push(min);
+        // Update the last visited node list
+        list.push(node);
 
-        let [x, y] = min.split(',');
-        map.push(
-          new Wall(
-            x * Config.wall,
-            y * Config.wall,
-            Config.wall,
-            Config.wall,
-            'red'
-          )
-        );
-      });
+        return findNext(next, list);
+      };
 
-      console.log(weights);
-      console.log(map);
+      // Build the visited node path.
+      findNext(startNode);
 
+      // visited.forEach(node => {
+      //   let [x, y] = node.split(',');
+      //   map.push(
+      //     new Wall(
+      //       x * Config.wall,
+      //       y * Config.wall,
+      //       Config.wall,
+      //       Config.wall,
+      //       'red'
+      //     )
+      //   );
+      // })
+
+      console.log(visited);
       return map;
     };
 
