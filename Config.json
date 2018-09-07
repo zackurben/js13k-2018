@@ -1,7 +1,7 @@
 {
   "height": 500,
   "width": 500,
-  "wall": 10,
+  "wall": 20,
   "gutter": 5,
   "debug": false,
   "b": true,

@@ -79,7 +79,7 @@ export default class MapEditor {
     this.keys = [];
 
     // Allow users to change the rand seed for difficulty change.
-    this.rand = 100;
+    this.rand = 10000;
 
     /**
      * Generate a map using prims algorithm.
@@ -108,15 +108,72 @@ export default class MapEditor {
       ];
 
       // Assign random weights to each node
-      let countX = Config.width / Config.wall;
-      let countY = Config.height / Config.wall;
-      for (let x = 0; x < countX; x++) {
-        for (let y = 0; y < countY; y++) {
-          weights[`${x},${y}`] = parseInt(Math.random(1) * this.rand);
+      let countX = Config.width / Config.wall - 1;
+      let countY = Config.height / Config.wall - 1;
+      for (let x = 1; x < countX; x++) {
+        for (let y = 1; y < countY; y++) {
+          weights[`${x},${y}`] = parseInt(Math.random(1) * this.rand - 1) + 1;
         }
       }
 
+      let visited = [];
+      const getMin = node => {
+        let [x, y] = node.split(',');
+        let min = this.rand;
+        let index = -1;
+        let next = [
+          `${x},${parseInt(y) - 1}`, // top
+          `${parseInt(x) + 1},${y}`, // right
+          `${x},${parseInt(y) + 1}`, // bottom
+          `${parseInt(x) - 1},${y}` // left
+        ];
+
+        let filtered = next.filter(tile => {
+          if (!weights.hasOwnProperty(tile) || visited.indexOf(node) !== -1) {
+            return false;
+          }
+
+          return true;
+        });
+
+        filtered.forEach(tile => {
+          if (weights[tile] < min) {
+            min = weights[tile];
+            index = tile;
+          }
+        });
+
+        if (index === -1) {
+          console.log(node, next, filtered);
+          console.log(weights);
+        }
+
+        return index;
+      };
+
+      Object.keys(weights).forEach(node => {
+        let min = getMin(node);
+        if (min === -1) {
+          return;
+        }
+
+        visited.push(min);
+
+        let [x, y] = min.split(',');
+        map.push(
+          new Wall(
+            x * Config.wall,
+            y * Config.wall,
+            Config.wall,
+            Config.wall,
+            'red'
+          )
+        );
+      });
+
       console.log(weights);
+      console.log(map);
+
       return map;
     };
 
