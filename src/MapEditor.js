@@ -86,31 +86,14 @@ export default class MapEditor {
      */
     this.generate = () => {
       // Generate the map bounds
-      let map = [
-        // Top wall
-        new Wall(0, 0, Config.wall, Config.width),
-
-        // Bottom wall
-        new Wall(0, Config.height - Config.wall, Config.wall, Config.width),
-
-        // Left wall
-        new Wall(0, Config.wall, Config.height - Config.wall * 2, Config.wall),
-
-        // Right wall
-        new Wall(
-          Config.width - Config.wall,
-          Config.wall,
-          Config.height - Config.wall * 2,
-          Config.wall
-        )
-      ];
+      let map = [];
 
       // Assign random weights to each node, to use with prims.
       let weights = {};
-      let countX = Config.width / Config.wall - 1;
-      let countY = Config.height / Config.wall - 1;
-      for (let x = 1; x < countX; x++) {
-        for (let y = 1; y < countY; y++) {
+      let countX = parseInt(Config.width / Config.wall / 2);
+      let countY = parseInt(Config.height / Config.wall / 2);
+      for (let x = 0; x < countX; x++) {
+        for (let y = 0; y < countY; y++) {
           weights[`${x},${y}`] = parseInt(Math.random(1) * this.rand - 1) + 1;
         }
       }
@@ -118,15 +101,20 @@ export default class MapEditor {
       // Start the maze generation from the center most-ish node.
       const mid = parseInt(Object.keys(weights).length / 2);
       const startNode = Object.keys(weights)[mid];
-      
-      // Track the final list of visited nodes.
+
+      // Track the full list of visited nodes.
       let visited = [];
+      let paths = [];
+      let path = [];
 
       /**
        * Get the shortest path to the 4 straight adjacent nodes.
-       * 
+       *
        * @param {String} node
        *   The nodes location `x,y`
+       *
+       * @returns {String}
+       *   The nodes location `x,y` with the shortest path.
        */
       const getMin = node => {
         let [x, y] = node.split(',');
@@ -143,7 +131,7 @@ export default class MapEditor {
 
         // Remove any undefined and previously visited nodes
         let filtered = next.filter(tile => {
-          if (!weights.hasOwnProperty(tile) || visited.indexOf(tile) !== -1) {
+          if (!weights.hasOwnProperty(tile) || visited.includes(tile)) {
             return false;
           }
 
@@ -158,25 +146,154 @@ export default class MapEditor {
           }
         });
 
-        // Return the `x,y` node location for the shortest path. 
+        // Return the `x,y` node location for the shortest path.
         return index;
       };
 
       /**
+       * Create the walls in the segment from prev to cur.
+       *
+       * @param {String} prev
+       *   The previous nodes location `x,y`
+       * @param {String} cur
+       *   The current nodes location `x,y`
+       *
+       * @returns {Array}
+       *   An array of the nodes from prev to cur.
+       */
+      const interpolateWalls = (prev, cur) => {
+        let [prevX, prevY] = prev.split(',').map(i => parseInt(i));
+        let [curX, curY] = cur.split(',').map(i => parseInt(i));
+
+        let startX, startY;
+        let lengthX = Math.abs(curX - prevX);
+        let lengthY = Math.abs(curY - prevY);
+
+        // prev is on the top
+        if (prevY < curY) {
+          console.log('top', prev, cur);
+          startX = prevX;
+          startY = prevY;
+        }
+        // prev is on the right
+        else if (prevX > curX) {
+          console.log('right', prev, cur);
+          startX = curX;
+          startY = curY;
+        }
+        // prev is on the bottom
+        else if (prevY > curY) {
+          console.log('bottom', prev, cur);
+          startX = curX;
+          startY = curY;
+        }
+        // prev is on the left
+        else if (prevX < curX) {
+          console.log('left', prev, cur);
+          startX = prevX;
+          startY = prevY;
+        }
+        // This is the first iteration, prev === cur
+        else {
+          console.log('start', prev, cur);
+          startX = curX;
+          startY = curY;
+        }
+
+        // Interpolate the walls between prev and cur.
+        let walls = [];
+        let x = 0;
+        let y = 0;
+        for (let i = 0; i < Math.max(lengthX, lengthY, 0); i++) {
+          walls.push(`${startX + x},${startY + y}`);
+
+          if (x < lengthX) x++;
+          if (y < lengthY) y++;
+        }
+
+        return walls;
+      };
+
+      /**
+       * Expand the input map, by putting walls in-between each row/col.
+       *
+       * @param {Array} path
+       *   The input path to expand.
+       *
+       * @returns {Array}
+       *   The expanded input path.
+       */
+      const expand = path => {
+        let out = [];
+
+        path.forEach(node => {
+          let [x, y] = node.split(',').map(i => parseInt(i));
+          out.push(`${x * 2 + 1},${y * 2 + 1}`);
+        });
+
+        return out;
+      };
+
+      /**
+       * Generate the map to render.
+       *
+       * @param {Array} paths
+       *   The array of paths to render.
+       *
+       * @returns {Array}
+       *   The path
+       */
+      const generateMap = paths => {
+        let out = [];
+
+        let row;
+        for (let x = 0; x < parseInt(Config.width / Config.wall); x++) {
+          row = [];
+          for (let y = 0; y < parseInt(Config.height / Config.wall); y++) {
+            row.push(true);
+          }
+
+          // Store and reset the row.
+          out.push(row);
+        }
+
+        // Expand the maze, to match the map size.
+        paths.forEach(path => {
+          let last;
+          expand(path).forEach(node => {
+            if (!last) {
+              last = node;
+            }
+
+            // For each path node, disable the wall creation.
+            interpolateWalls(last, node).forEach(segment => {
+              let [x, y] = segment.split(',').map(i => parseInt(i));
+              out[x][y] = false;
+            });
+            last = node;
+          });
+        });
+
+        return out;
+      };
+
+      /**
        * Recursively find the next node in the list using prims algorithm.
-       * 
+       *
        * @param {String} node
        *   The current node being traversed.
-       * @param {Array} list 
+       * @param {Array} list
        *   The list of previously visited nodes, which may have more paths.
        */
       const findNext = (node, list = []) => {
         if (!node) return;
 
-        // Update the traversal list.
-        visited.push(node);
-        
-        
+        // Update the full traversal list.
+        if (!visited.includes(node)) visited.push(node);
+
+        // Update the current path.
+        path.push(node);
+
         // Determine the travel direction
         let next = getMin(node);
         if (next === -1) {
@@ -185,8 +302,12 @@ export default class MapEditor {
             next = list.pop();
           }
 
-          // If there are no more nodes in the list, we are done?
+          // If there are no more nodes in the list, we are done.
           if (next === undefined) return;
+
+          // Push the last path to the stack, and restart the next path.
+          paths.push(path);
+          path = [];
         }
 
         // Update the last visited node list
@@ -198,20 +319,23 @@ export default class MapEditor {
       // Build the visited node path.
       findNext(startNode);
 
-      // visited.forEach(node => {
-      //   let [x, y] = node.split(',');
-      //   map.push(
-      //     new Wall(
-      //       x * Config.wall,
-      //       y * Config.wall,
-      //       Config.wall,
-      //       Config.wall,
-      //       'red'
-      //     )
-      //   );
-      // })
+      // Generate the empty map
+      generateMap(paths).forEach((row, x) => {
+        row.forEach((col, y) => {
+          if (!col) return;
 
-      console.log(visited);
+          map.push(
+            new Wall(
+              x * Config.wall,
+              y * Config.wall,
+              Config.wall,
+              Config.wall,
+              'red'
+            )
+          );
+        });
+      });
+
       return map;
     };
 
