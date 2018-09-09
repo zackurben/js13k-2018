@@ -273,7 +273,7 @@ export default class MapEditor {
             // Randomly place an objective at the end of a path.
             if (
               full.length - 1 === index &&
-              Math.random() >= 1 - Config.spawn
+              Math.random() >= 1 - Config.objectiveSpawn
             ) {
               let end = node;
               let [x, y] = end.split(',').map(i => parseInt(i));
@@ -350,7 +350,7 @@ export default class MapEditor {
                 y * Config.wall,
                 Config.wall,
                 Config.wall,
-                x % 2 == 0 || y % 2 === 0 ? 'white' : 'red'
+                x % 2 == 0 || y % 2 === 0 ? Config.wallColor : Config.wallError
               )
             );
           }
@@ -363,7 +363,7 @@ export default class MapEditor {
                 y * Config.wall,
                 Config.wall,
                 Config.wall,
-                'purple',
+                Config.levelStartColor,
                 0,
                 false,
                 -1,
@@ -380,7 +380,7 @@ export default class MapEditor {
                 y * Config.wall,
                 Config.wall,
                 Config.wall,
-                'green',
+                Config.levelEndColor,
                 0,
                 false,
                 -1,
@@ -397,7 +397,7 @@ export default class MapEditor {
                 y * Config.wall + Config.gutter,
                 Config.Objective,
                 Config.Objective,
-                '#8A2E60',
+                Config.objectiveColor,
                 0,
                 false,
                 -1,
