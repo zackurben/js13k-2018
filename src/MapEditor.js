@@ -171,31 +171,31 @@ export default class MapEditor {
 
         // prev is on the top
         if (prevY < curY) {
-          console.log('top', prev, cur);
+          // console.log('top', prev, cur);
           startX = prevX;
           startY = prevY;
         }
         // prev is on the right
         else if (prevX > curX) {
-          console.log('right', prev, cur);
+          // console.log('right', prev, cur);
           startX = curX;
           startY = curY;
         }
         // prev is on the bottom
         else if (prevY > curY) {
-          console.log('bottom', prev, cur);
+          // console.log('bottom', prev, cur);
           startX = curX;
           startY = curY;
         }
         // prev is on the left
         else if (prevX < curX) {
-          console.log('left', prev, cur);
+          // console.log('left', prev, cur);
           startX = prevX;
           startY = prevY;
         }
         // This is the first iteration, prev === cur
         else {
-          console.log('start', prev, cur);
+          // console.log('start', prev, cur);
           startX = curX;
           startY = curY;
         }
@@ -204,13 +204,14 @@ export default class MapEditor {
         let walls = [];
         let x = 0;
         let y = 0;
-        for (let i = 0; i < Math.max(lengthX, lengthY, 0); i++) {
+        for (let i = 0; i <= Math.max(lengthX, lengthY, 0); i++) {
           walls.push(`${startX + x},${startY + y}`);
 
           if (x < lengthX) x++;
           if (y < lengthY) y++;
         }
 
+        console.log(prev, cur, walls)
         return walls;
       };
 
@@ -231,6 +232,7 @@ export default class MapEditor {
           out.push(`${x * 2 + 1},${y * 2 + 1}`);
         });
 
+        // console.log(path, out);
         return out;
       };
 
@@ -297,6 +299,7 @@ export default class MapEditor {
         // Determine the travel direction
         let next = getMin(node);
         if (next === -1) {
+          // console.log(list);
           next = list.pop();
           while (next !== undefined && getMin(next) === -1) {
             next = list.pop();
@@ -305,8 +308,11 @@ export default class MapEditor {
           // If there are no more nodes in the list, we are done.
           if (next === undefined) return;
 
+          // console.log(next, getMin(next))
+
           // Push the last path to the stack, and restart the next path.
           paths.push(path);
+          console.log(path);
           path = [];
         }
 
@@ -321,6 +327,7 @@ export default class MapEditor {
 
       // Generate the empty map
       generateMap(paths).forEach((row, x) => {
+        // console.log(paths);
         row.forEach((col, y) => {
           if (!col) return;
 
@@ -330,11 +337,35 @@ export default class MapEditor {
               y * Config.wall,
               Config.wall,
               Config.wall,
-              'red'
+              x % 2 == 0 || y % 2 === 0 ? 'white' : 'red'
             )
           );
         });
       });
+
+      // VERIFY
+      console.log(Object.keys(weights).length, visited.length)
+      let count = 0;
+      let visits = {};
+      paths.forEach(p => {
+        p.forEach(c => {
+          count++;
+          visits[c] = visits[c] || 0;
+          visits[c]++;
+        })
+      })
+      console.log(count, visits, Object.keys(visits).length)
+      
+      // missing tile
+      let missing = [];
+      visited.forEach(i => {
+        if (!visits[i]) {
+          missing.push(i);
+        }
+      })
+      console.log('missing', missing);
+
+      // END VERIFY
 
       return map;
     };
