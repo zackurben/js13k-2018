@@ -27,3 +27,7 @@ p {
     display: none;
   }
 }
+
+.hidden {
+  display: none !important;
+}

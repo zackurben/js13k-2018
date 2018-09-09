@@ -1,3 +1,27 @@
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-slow {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 body {
   padding-top: 50px;
 
@@ -13,7 +37,7 @@ body {
   }
 }
 
-.game-area {
+.g-a {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -26,7 +50,7 @@ body {
 }
 
 @media (min-width: 1200px) {
-  .game-area {
+  .g-a {
     margin: 0 auto;
     padding: 20px;
     width: 1200px;
@@ -36,7 +60,7 @@ body {
   }
 }
 
-.game-area__canvas-container {
+.g-a_c-c {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -44,7 +68,7 @@ body {
   width: 100%;
 }
 
-.game-area__canvas-container > canvas {
+.g-a_c-c > canvas {
   display: block;
   margin: 0 auto;
 
@@ -52,7 +76,7 @@ body {
   border-radius: 10px;
 }
 
-.game-area__data {
+.g-a_d {
   position: absolute;
   top: 15px;
   width: 100%;
@@ -66,7 +90,7 @@ body {
 }
 
 @media (min-width: 1200px) {
-  .game-area__data {
+  .g-a_d {
     position: relative;
     top: 0;
     margin-top: 0;
@@ -76,18 +100,18 @@ body {
   }
 }
 
-.game-area__data__point {
+.g-a_d_p {
   margin: 0;
 
   font-family: var(--font-mono);
   font-size: 18px;
 }
 
-.game-area__data__point.game-area__data__point--level {
+.g-a_d_p.g-a_d_p-l {
   font-size: 26px;
 }
 
-.game-area__pause-button {
+.g-a_p-b {
   align-self: center;
   margin-top: 20px;
   padding: 10px 40px;
@@ -100,7 +124,53 @@ body {
   font-weight: bold;
 }
 
-.game-area__pause-button:hover {
+.g-a_p-b:hover {
   box-shadow: 3px 3px 1px rgba(0, 0, 0, 30%);
   cursor: pointer;
+}
+
+.s {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  height: calc(100% + 50px);
+  width: 100%;
+  margin-top: -50px;
+
+  background: var(--color-background-dark);
+}
+
+.s_s-b {
+  align-self: center;
+  padding: 10px 40px;
+
+  background: var(--color-accent-primary);
+  border: none;
+  border-radius: 10px;
+  color: var(--color-background-dark);
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.s_s-b:hover {
+  box-shadow: 3px 3px 1px rgba(0, 0, 0, 30%);
+  cursor: pointer;
+}
+
+.s_l {
+  margin: 0;
+
+  color: var(--color-accent-primary);
+  font-size: 72px;
+  text-align: center;
+
+  animation: fade-in 1s ease-in;
+}
+
+.s_l_s {
+  display: block;
+
+  font-size: 58px;
+
+  animation: fade-in-slow 1.5s ease-in;
 }
