@@ -2,6 +2,8 @@
   "height": 500,
   "width": 500,
   "wall": 20,
+  "objective": 10,
+  "spawn": 0.66,
   "gutter": 5,
   "debug": false,
   "b": true,
