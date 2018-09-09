@@ -357,7 +357,7 @@ export default class MapEditor {
                 Config.levelStartColor,
                 0,
                 false,
-                -1,
+                0,
                 true
               )
             );
@@ -373,9 +373,9 @@ export default class MapEditor {
                 Config.wall,
                 Config.levelEndColor,
                 0,
-                false,
-                -1,
-                true
+                true,
+                this.levelId,
+                false
               )
             );
           }
@@ -389,10 +389,10 @@ export default class MapEditor {
                 Config.Objective,
                 Config.Objective,
                 Config.objectiveColor,
+                5,
+                true,
                 0,
-                false,
-                -1,
-                true
+                false
               )
             );
           }
