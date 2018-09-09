@@ -373,8 +373,8 @@ export default class MapEditor {
                 Config.wall,
                 Config.levelEndColor,
                 0,
-                true,
-                this.levelId,
+                false,
+                parseInt(this.levelId) + 1,
                 false
               )
             );
