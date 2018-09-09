@@ -9,6 +9,13 @@
   "wallError": "red",
   "levelStartColor": "purple",
   "levelEndColor": "green",
+  "color": [
+    "white",
+    "red",
+    "purple",
+    "green",
+    "#8A2E60"
+  ],
   "gutter": 5,
   "debug": false,
   "b": true,

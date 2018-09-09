@@ -160,7 +160,9 @@ export default class Objective {
       this.y / 10,
       this.height / 10,
       this.width / 10,
-      Config.c[this.color],
+      Config.color.indexOf(this.color) !== -1
+        ? Config.color.indexOf(this.color)
+        : Config.color[0],
       this.score / 10,
       this.trigger === true ? 1 : 0,
       this.load,

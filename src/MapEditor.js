@@ -65,16 +65,7 @@ export default class MapEditor {
     this.colorIndex = 0;
 
     // The list of available entity colors.
-    this.colors = [
-      'black',
-      'red',
-      'orange',
-      'yellow',
-      'green',
-      'blue',
-      'indigo',
-      'violet'
-    ];
+    this.colors = Config.color;
 
     this.keys = [];
 
