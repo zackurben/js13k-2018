@@ -87,7 +87,7 @@ function start() {
 
   // The list of enumerated entities in the game.
   let entities = [ctx.input, ctx.level, ctx.player];
-  if (Config.b) {
+  if (Config.builder) {
     ctx.mapEditor = new MapEditor();
     entities.push(ctx.mapEditor);
   }
