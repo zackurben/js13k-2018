@@ -22,8 +22,10 @@ function start() {
   document.getElementById('game').classList.remove('hidden');
 
   let MapEditor = undefined;
+  let Crusher = undefined;
   try {
     MapEditor = require('./MapEditor').default;
+    Crusher = require('./Crusher').default;
   } catch (e) {}
 
   /**
@@ -89,6 +91,7 @@ function start() {
   let entities = [ctx.input, ctx.level, ctx.player];
   if (Config.builder) {
     ctx.mapEditor = new MapEditor();
+    ctx.crusher = Crusher;
     entities.push(ctx.mapEditor);
   }
 

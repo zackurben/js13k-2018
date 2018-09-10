@@ -18,5 +18,5 @@
   ],
   "gutter": 5,
   "debug": false,
-  "builder": false
+  "builder": true
 }

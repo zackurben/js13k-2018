@@ -502,11 +502,18 @@ export default class MapEditor {
     }
   }
 
-  printMap(level) {
-    console.log(
-      `Level: ${level}`,
-      [].concat(this.entities.map(e => e.toJSON()).join(',-1,')).toString()
-    );
+  printMap(ctx) {
+    let out = []
+      .concat(this.entities.map(e => e.toJSON()).join(',-1,'))
+      .toString();
+    let crush = ctx.crusher(out);
+    let min = crush.map(e => e.toJSON()).join(',-1,');
+
+    // @TODO: REMOVE
+    this.entities = crush;
+
+    console.log(`Level: ${ctx.level.level}`, out.length, out);
+    console.log(`Compressed?:`, min.length, min);
   }
 
   /**
@@ -547,7 +554,7 @@ export default class MapEditor {
         case '`':
           if (!this.editor) return;
 
-          this.printMap(ctx.level.level);
+          this.printMap(ctx);
           break;
         case '1':
         case '2':
@@ -559,7 +566,7 @@ export default class MapEditor {
           if (!this.editor) return;
 
           // Always print the current map before switching levels.
-          this.printMap(ctx.level.level);
+          this.printMap(ctx);
           ctx.level.load(parseInt(key), ctx);
           break;
         case 'q':
