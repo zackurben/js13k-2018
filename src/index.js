@@ -9,6 +9,7 @@ import Player from './Player';
 import Level from './Level';
 import DataDisplay from './data/data-display';
 import Color from './color/color';
+import Audio from './Audio';
 
 if (window.localStorage.getItem('skip-splash')) {
   start();
@@ -84,7 +85,8 @@ function start() {
     Config,
     level: new Level(),
     dataDisplay: new DataDisplay(getDataDisplayMap()),
-    color: new Color()
+    color: new Color(),
+    audio: new Audio()
   };
 
   // The list of enumerated entities in the game.
