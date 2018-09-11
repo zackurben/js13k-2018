@@ -509,11 +509,11 @@ export default class MapEditor {
     let crush = ctx.crusher(out);
     let min = crush.map(e => e.toJSON()).join(',-1,');
 
-    // @TODO: REMOVE
+    // Live load the compressed map.
     this.entities = crush;
-
+    
     console.log(`Level: ${ctx.level.level}`, out.length, out);
-    console.log(`Compressed?:`, min.length, min);
+    console.log(`Compressed level: ${ctx.level.level}`, min.length, min);
   }
 
   /**
