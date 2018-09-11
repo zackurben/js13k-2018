@@ -80,7 +80,9 @@ export default class Wall {
       this.y / 10,
       this.height / 10,
       this.width / 10,
-      Config.c[this.color]
+      Config.color.indexOf(this.color) !== -1
+        ? Config.color.indexOf(this.color)
+        : Config.color[0]
     ];
   }
 

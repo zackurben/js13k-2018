@@ -11,9 +11,6 @@ import six from './levels/6';
 import seven from './levels/7';
 import Config from '../Config';
 
-// The reverse color map for mapping ints to colors.
-const COLORS = Object.keys(Config.c);
-
 /**
  * Coerce the input into a number
  *
@@ -29,6 +26,23 @@ const toInt = input => {
   }
 
   return parseInt(input);
+};
+
+/**
+ * Coerce the input into a float
+ *
+ * @param {String} input
+ *   The string input
+ *
+ * @returns {Number|undefined}
+ *   The coerced value
+ */
+const toFloat = input => {
+  if (input === undefined) {
+    return undefined;
+  }
+
+  return parseFloat(input);
 };
 
 /**
@@ -76,11 +90,11 @@ const parse = i => {
       start
     ] = e.split(',');
     type = toInt(type);
-    x = toInt(x) * 10;
-    y = toInt(y) * 10;
+    x = toFloat(x) * 10;
+    y = toFloat(y) * 10;
     height = toInt(height) * 10;
     width = toInt(width) * 10;
-    color = COLORS[toInt(color)];
+    color = Config.color[toInt(color)];
     score = toInt(score) * 10;
     trigger = toBool(trigger);
     load = toInt(load);
@@ -156,21 +170,23 @@ export default class Level {
   }
 
   load(id, ctx) {
-    this.level = id;
-    this.entities = [].concat(levels[this.level].w, levels[this.level].o);
+    setTimeout(() => {
+      this.level = id;
+      this.entities = [].concat(levels[this.level].w, levels[this.level].o);
 
-    let start = this.entities
-      .filter(e => e.hasOwnProperty('start') && e.start)
-      .shift();
-    if (start) {
-      // Spawn the player in the center of the tile.
-      let origin = {
-        x: start.x + parseInt((start.width - ctx.player.width) / 2),
-        y: start.y + parseInt((start.height - ctx.player.height) / 2)
-      };
+      let start = this.entities
+        .filter(e => e.hasOwnProperty('start') && e.start)
+        .shift();
+      if (start) {
+        // Spawn the player in the center of the tile.
+        let origin = {
+          x: start.x + parseInt((start.width - ctx.player.width) / 2),
+          y: start.y + parseInt((start.height - ctx.player.height) / 2)
+        };
 
-      ctx.player.move(ctx, origin);
-    }
+        ctx.player.move(ctx, origin);
+      }
+    });
 
     // Restart the level timer on each level load.
     this.startTime = parseInt(new Date().getTime() / 1000);

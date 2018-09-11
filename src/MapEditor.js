@@ -65,16 +65,7 @@ export default class MapEditor {
     this.colorIndex = 0;
 
     // The list of available entity colors.
-    this.colors = [
-      'black',
-      'red',
-      'orange',
-      'yellow',
-      'green',
-      'blue',
-      'indigo',
-      'violet'
-    ];
+    this.colors = Config.color;
 
     this.keys = [];
 
@@ -83,7 +74,7 @@ export default class MapEditor {
 
     /**
      * Generate a map using prims algorithm.
-     * 
+     *
      * @returns {Array}
      *   The map entities to render.
      */
@@ -248,7 +239,7 @@ export default class MapEditor {
         for (let x = 0; x < parseInt(Config.width / Config.wall); x++) {
           row = [];
           for (let y = 0; y < parseInt(Config.height / Config.wall); y++) {
-            row.push(true);
+            row.push(1);
           }
 
           // Store and reset the row.
@@ -258,7 +249,7 @@ export default class MapEditor {
         // Expand the maze, to match the map size.
         paths.forEach(path => {
           let last;
-          expand(path).forEach(node => {
+          expand(path).forEach((node, index, full) => {
             if (!last) {
               last = node;
             }
@@ -266,11 +257,27 @@ export default class MapEditor {
             // For each path node, disable the wall creation.
             interpolateWalls(last, node).forEach(segment => {
               let [x, y] = segment.split(',').map(i => parseInt(i));
-              out[x][y] = false;
+              out[x][y] = 0;
             });
             last = node;
+
+            // Randomly place an objective at the end of a path.
+            if (
+              full.length - 1 === index &&
+              Math.random() >= 1 - Config.objectiveSpawn
+            ) {
+              let end = node;
+              let [x, y] = end.split(',').map(i => parseInt(i));
+              out[x][y] = 4;
+            }
           });
         });
+
+        // Add the map spawn and next level objective.
+        out[1][1] = 2;
+        out[parseInt(Config.width / Config.wall) - 2][
+          parseInt(Config.width / Config.wall) - 2
+        ] = 3;
 
         return out;
       };
@@ -323,17 +330,72 @@ export default class MapEditor {
       // Generate the empty map
       generateMap(paths).forEach((row, x) => {
         row.forEach((col, y) => {
-          if (!col) return;
+          // Walking path
+          if (col === 0) return;
 
-          map.push(
-            new Wall(
-              x * Config.wall,
-              y * Config.wall,
-              Config.wall,
-              Config.wall,
-              x % 2 == 0 || y % 2 === 0 ? 'white' : 'red'
-            )
-          );
+          // Wall
+          if (col === 1) {
+            return map.push(
+              new Wall(
+                x * Config.wall,
+                y * Config.wall,
+                Config.wall,
+                Config.wall,
+                x % 2 == 0 || y % 2 === 0 ? Config.wallColor : Config.wallError
+              )
+            );
+          }
+
+          // Start of level
+          if (col === 2) {
+            return map.push(
+              new Objective(
+                x * Config.wall,
+                y * Config.wall,
+                Config.wall,
+                Config.wall,
+                Config.levelStartColor,
+                0,
+                false,
+                0,
+                true
+              )
+            );
+          }
+
+          // End of level
+          if (col === 3) {
+            return map.push(
+              new Objective(
+                x * Config.wall,
+                y * Config.wall,
+                Config.wall,
+                Config.wall,
+                Config.levelEndColor,
+                0,
+                false,
+                parseInt(this.levelId) + 1,
+                false
+              )
+            );
+          }
+
+          // Point objectives
+          if (col === 4) {
+            return map.push(
+              new Objective(
+                x * Config.wall + Config.gutter,
+                y * Config.wall + Config.gutter,
+                Config.Objective,
+                Config.Objective,
+                Config.objectiveColor,
+                5,
+                true,
+                0,
+                false
+              )
+            );
+          }
         });
       });
 
