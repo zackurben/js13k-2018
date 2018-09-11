@@ -511,7 +511,7 @@ export default class MapEditor {
 
     // Live load the compressed map.
     this.entities = crush;
-    
+
     console.log(`Level: ${ctx.level.level}`, out.length, out);
     console.log(`Compressed level: ${ctx.level.level}`, min.length, min);
   }
@@ -563,11 +563,18 @@ export default class MapEditor {
         case '5':
         case '6':
         case '7':
-          if (!this.editor) return;
-
           // Always print the current map before switching levels.
-          this.printMap(ctx);
           ctx.level.load(parseInt(key), ctx);
+
+          setTimeout(() => {
+            if (this.editor) {
+              this.entities = ctx.level.getEntities();
+              ctx.level.entities = [];
+            } else {
+              this.entities = [];
+            }
+          });
+
           break;
         case 'q':
         case 'w':

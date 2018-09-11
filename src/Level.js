@@ -23,7 +23,7 @@ export default class Level {
    *   The game context object
    */
   render(ctx) {
-    this.entities.forEach(e =>
+    this.getEntities().forEach(e =>
       e.render({ canvas: ctx.canvas, Config: ctx.Config })
     );
 
