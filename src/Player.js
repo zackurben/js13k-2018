@@ -37,7 +37,7 @@ export default class Player {
     canvas.fillRect(this.x, this.y, this.width, this.height);
 
     // If debug is enabled, render the center point of the player and its AABB.
-    if (Config.debug) {
+    if (process.env.NODE_ENV === 'development' && Config.debug) {
       // Debug the center point
       canvas.beginPath();
       canvas.fillStyle = 'green';

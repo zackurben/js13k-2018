@@ -47,7 +47,7 @@ export default class Objective {
     canvas.fillRect(this.x, this.y, this.width, this.height);
 
     // If debug is enabled, render the center of the objective and its AABB.
-    if (Config.debug) {
+    if (process.env.NODE_ENV === 'development' && Config.debug) {
       if (this.start !== true) {
         // Debug the center point
         canvas.beginPath();

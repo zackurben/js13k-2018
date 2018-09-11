@@ -37,7 +37,7 @@ export default class Wall {
     canvas.fillStyle = this.color;
     canvas.fillRect(this.x, this.y, this.width, this.height);
 
-    if (Config.debug) {
+    if (process.env.NODE_ENV === 'development' && Config.debug) {
       // Debug the center point
       canvas.beginPath();
       canvas.fillStyle = 'green';
