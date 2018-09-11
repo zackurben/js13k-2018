@@ -10,35 +10,81 @@ export default input => {
   let level = parse(input);
   let walls = [];
   let objectives = [];
+  let map = {};
 
-  // Optimize the walls.
-  let last;
-  level.w.forEach(section => {
-    if (!last) {
-      //  || (last.x !== section.x && last.y !== section.y)
-      last = section;
-    }
+  let last,
+    x = 0,
+    y = 0;
 
-    // Horizontal neighbor
-    if (
-      section.x === last.x + last.width &&
-      section.y === last.y + last.height - Config.wall
-    ) {
-      last.width += section.width;
+  level.w.forEach(w => (map[`${w.x},${w.y}`] = w));
+
+  // Optimize the walls (vertically).
+  for (x = 0; x < Config.width; x += Config.wall) {
+    for (y = 0; y < Config.height; y += Config.wall) {
+      if (!map[`${x},${y}`]) continue;
+      let section = map[`${x},${y}`];
+      if (!last) {
+        last = section;
+        continue;
+      }
+
+      // Vertical neighbor
+      if (
+        section.y === last.y + last.height &&
+        section.x === last.x &&
+        section.width === last.width
+      ) {
+        last.height += section.height;
+      }
+      // Not a neighbor
+      else {
+        walls.push(last);
+        last = section;
+      }
+
+      delete map[`${x},${y}`];
     }
-    // Vertical neighbor
-    else if (
-      section.y === last.y + last.height &&
-      section.x === last.x + last.width - Config.wall
-    ) {
-      last.height += section.height;
+  }
+  walls.push(last);
+
+  // Optimize the walls (Horizontally).
+  // Update the map model
+  map = {};
+  walls.forEach(w => (map[`${w.x},${w.y}`] = w));
+
+  // Clear the walls from the first pass.
+  walls = [];
+
+  // Reverse the direction for another pass.
+  last = undefined;
+  x = 0;
+  y = 0;
+  for (y = 0; y < Config.height; y += Config.wall) {
+    for (x = 0; x < Config.width; x += Config.wall) {
+      if (!map[`${x},${y}`]) continue;
+      let section = map[`${x},${y}`];
+      if (!last) {
+        last = section;
+        continue;
+      }
+
+      // Horizontal neighbor
+      if (
+        section.x === last.x + last.width &&
+        section.y === last.y &&
+        section.height === last.height
+      ) {
+        last.width += section.width;
+      }
+      // Not a neighbor
+      else {
+        walls.push(last);
+        last = section;
+      }
+
+      delete map[`${x},${y}`];
     }
-    // Not a neighbor
-    else {
-      walls.push(last);
-      last = section;
-    }
-  });
+  }
   walls.push(last);
 
   return [].concat(walls, level.o);
