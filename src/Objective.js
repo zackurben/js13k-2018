@@ -43,11 +43,23 @@ export default class Objective {
       return;
     }
 
+    canvas.strokeStyle = this.color;
+    canvas.strokeRect(
+      this.x + Config.levelGutter,
+      this.y + Config.levelGutter,
+      this.width - Config.levelGutter * 2,
+      this.height - Config.levelGutter * 2
+    );
     canvas.fillStyle = this.color;
-    canvas.fillRect(this.x, this.y, this.width, this.height);
+    canvas.fillRect(
+      this.x + Config.levelGutter * 2,
+      this.y + Config.levelGutter * 2,
+      this.width - Config.levelGutter * 4,
+      this.height - Config.levelGutter * 4
+    );
 
     // If debug is enabled, render the center of the objective and its AABB.
-    if (Config.debug) {
+    if (process.env.NODE_ENV === 'development' && Config.debug) {
       if (this.start !== true) {
         // Debug the center point
         canvas.beginPath();
