@@ -79,37 +79,69 @@ export default class Player {
    */
   move(ctx, point) {
     // Assume the player can move anywhere.
-    let canMove = true;
+    let moveX = true;
+    let moveY = true;
 
     // Check each known wall in the game context and try to invalidate the move.
     ctx.level.getEntities().forEach(e => {
+      // Check if this is a valid move in the x direction.
       if (
         e instanceof Wall &&
         Physics.intersects(
           // Shim the point to contain the player dimensions for correct AABB
-          Object.assign({}, point, { height: this.height, width: this.width }),
+          Object.assign(
+            { x: point.x, y: this.y },
+            { height: this.height, width: this.width }
+          ),
           e
         )
       ) {
         // Any player intersections invalidate the move.
-        canMove = false;
-      } else if (
+        moveX = false;
+      }
+
+      // Check if this is a valid move in the y direction.
+      if (
+        e instanceof Wall &&
+        Physics.intersects(
+          // Shim the point to contain the player dimensions for correct AABB
+          Object.assign(
+            { y: point.y, x: this.x },
+            { height: this.height, width: this.width }
+          ),
+          e
+        )
+      ) {
+        // Any player intersections invalidate the move.
+        moveY = false;
+      }
+    });
+
+    // Only change the player location if the move in each direction passed all
+    // wall checks.
+    if (moveX) {
+      this.x = point.x;
+    }
+    if (moveY) {
+      this.y = point.y;
+    }
+
+    // Check for collisions at the new player location.
+    ctx.level.getEntities().forEach(e => {
+      if (
         e instanceof Objective &&
         e.alive &&
         Physics.intersects(
           // Shim the point to contain the player dimensions for correct AABB
-          Object.assign({}, point, { height: this.height, width: this.width }),
+          Object.assign(
+            { x: this.x, y: this.y },
+            { height: this.height, width: this.width }
+          ),
           e
         )
       ) {
         e.interact(ctx);
       }
     });
-
-    // Only change the player location if the move passed all wall checks.
-    if (canMove) {
-      this.x = point.x;
-      this.y = point.y;
-    }
   }
 }
