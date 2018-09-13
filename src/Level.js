@@ -13,7 +13,7 @@ export default class Level {
     this.score = 0;
 
     this.startTime = 0;
-    this.time = -1;
+    this.time = -0.2;
   }
 
   /**
