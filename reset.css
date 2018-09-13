@@ -28,6 +28,12 @@ p {
   }
 }
 
+@media (min-width: 1200px) {
+  .mobile-only {
+    display: none;
+  }
+}
+
 .hidden {
   display: none !important;
 }
