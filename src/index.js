@@ -120,7 +120,11 @@ function start() {
   // The time in ms since the last frame.
   let delta = 0;
 
-  ctx.audio.music();
+  // Skip playing music if its set in the local storage
+  if (!window.localStorage.getItem('skip-music')) {
+    ctx.audio.music();
+  }
+
   ctx.level.load(1, ctx);
 
   /**
