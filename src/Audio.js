@@ -59,7 +59,7 @@ const map = {
   19: 49.0,
   // 18: 46.25,
   // 17: 43.65,
-  16: 41.2,
+  16: 41.2
   // 15: 38.89,
   // 14: 36.71, // too low, sounds bad lol
   // 13: 34.65,
@@ -100,44 +100,71 @@ export default class Audio {
   music() {
     let out = [];
     let speed = 1000 / (song.beatsPerMinute / 60) / 1000 / 4;
+    let lastNode;
+    let largestTime;
 
-    song.channels.forEach((channel, ci) => {
+    song.channels.forEach(channel => {
       let [instrument] = channel.instruments;
 
-      // Fix pattern index.
-      channel.patterns.unshift({
-        instrument: 1,
-        notes: []
-      });
+      channel.sequence.forEach((pattern, patternIndex) => {
+        []
+          .concat(
+            {
+              instrument: 1,
+              notes: []
+            },
+            channel.patterns
+          )
+          [pattern].notes.forEach(note => {
+            note.pitches.forEach(pitch => {
+              let [start, stop] = note.points;
+              if (!map[pitch]) {
+                return;
+              }
 
-      channel.sequence.forEach((i, index) => {
-        channel.patterns[i].notes.forEach(note => {
-          note.pitches.forEach(pitch => {
-            let [start, stop] = note.points;
-            if (!map[pitch]) {
-              return;
-            }
+              let noteDuration = (stop.tick - start.tick) * speed;
+              let noteDelay = speed * start.tick + patternIndex * 32 * speed;
+              let end = noteDelay + noteDuration;
+              let node = this.play(
+                map[pitch],
+                noteDuration,
+                noteDelay,
+                instrument.wave,
+                0.1
+              );
 
-            this.play(
-              map[pitch],
-              (stop.tick - start.tick) * speed,
-              speed * start.tick + index * 32 * speed,
-              instrument.wave
-            );
+              if (!largestTime) {
+                largestTime = end;
+              }
+              if (!lastNode) {
+                lastNode = node;
+              }
+              if (end >= largestTime) {
+                largestTime = end;
+                lastNode = node;
+              }
+            });
           });
-        });
       });
     });
+
+    lastNode.onended = () => this.music();
   }
 
-  play(freq = 440, len = 0.1, off = 0, type = 'sine') {
+  play(freq = 440, len = 0.1, off = 0, type = 'sine', gain = 0.2) {
+    let volume = this.context.createGain();
+    volume.connect(this.context.destination);
+    volume.gain.value = gain;
+
     let osc = this.context.createOscillator();
     osc.frequency.value = freq;
     osc.type = type;
 
     let now = this.context.currentTime;
-    osc.connect(this.volume);
+    osc.connect(volume);
     osc.start(now + off);
     osc.stop(now + off + len);
+
+    return osc;
   }
 }
