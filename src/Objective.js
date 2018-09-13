@@ -116,6 +116,7 @@ export default class Objective {
     if (this.trigger) {
       this.alive = false;
       ctx.level.addScore(this.score);
+      ctx.audio.pickup();
     }
     if (this.load > 0) {
       ctx.level.load(this.load, ctx);

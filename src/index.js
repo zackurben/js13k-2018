@@ -9,6 +9,7 @@ import Player from './Player';
 import Level from './Level';
 import DataDisplay from './data/data-display';
 import Color from './color/color';
+import Audio from './Audio';
 
 const globalState = {
   paused: false
@@ -101,7 +102,8 @@ function start() {
     level: new Level(),
     dataDisplay: new DataDisplay(getDataDisplayMap()),
     color: new Color(),
-    pause
+    pause,
+    audio: new Audio()
   };
 
   // The list of enumerated entities in the game.
@@ -118,6 +120,7 @@ function start() {
   // The time in ms since the last frame.
   let delta = 0;
 
+  ctx.audio.music();
   ctx.level.load(1, ctx);
 
   /**
