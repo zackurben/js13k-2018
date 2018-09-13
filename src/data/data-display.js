@@ -36,7 +36,57 @@ export default class DataDisplay {
       return;
     }
 
-    this.domState[key] = value;
-    this.keyDisplayNodeMap[key].innerHTML = value;
+    if (key !== 'level') {
+      this.domState[key] = value;
+      this.keyDisplayNodeMap[key].innerHTML = value;
+
+      return;
+    }
+
+    let levelValue;
+
+    switch (value) {
+      case 1: {
+        levelValue = '1: Physical';
+        break;
+      }
+
+      case 2: {
+        levelValue = '2: Data Link';
+        break;
+      }
+
+      case 3: {
+        levelValue = '3: Network';
+        break;
+      }
+
+      case 4: {
+        levelValue = '4: Transport';
+        break;
+      }
+
+      case 5: {
+        levelValue = '5: Session';
+        break;
+      }
+
+      case 6: {
+        levelValue = '6: Presentation';
+        break;
+      }
+
+      case 7: {
+        levelValue = '7: Application';
+        break;
+      }
+
+      default: {
+        levelValue = value;
+      }
+    }
+
+    this.domState[key] = levelValue;
+    this.keyDisplayNodeMap[key].innerHTML = levelValue;
   }
 }

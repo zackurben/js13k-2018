@@ -97,13 +97,13 @@ function start() {
   const ctx = {
     canvas: getCanvas(),
     player: new Player(),
-    input: new Input(),
     Config,
     level: new Level(),
     dataDisplay: new DataDisplay(getDataDisplayMap()),
     color: new Color(),
     pause,
-    audio: new Audio()
+    audio: new Audio(),
+    input: new Input()
   };
 
   // The list of enumerated entities in the game.
