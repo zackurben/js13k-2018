@@ -38,7 +38,7 @@
     "watch": "webpack --progress --watch --config webpack.dev.js",
     "start": "concurrently --kill-others --names 'localtunnel,webpack dev-server' --prefix-colors 'magenta,cyan' 'npm run mobile' 'npm run dev-server'",
     "build": "webpack --config webpack.prod.js",
-    "mobile": "lt --port 9891 --subdomain js13k"
+    "mobile": "lt --port 9891 -o"
   },
   "author": "Zack Urben <zackurben@gmail.com> (http://zackurben.com)",
   "license": "MIT",

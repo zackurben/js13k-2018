@@ -2,6 +2,8 @@
 
 In Network Hell, you play the role of a request traveling back up the [OSI Stack](https://en.wikipedia.org/wiki/OSI_model) to try and connect to the outside world. Move quickly and pickup packets along the way to provide data to your consumer with the least response time.
 
+This is a submission for [JS13kGames](https://js13kgames.com/)!
+
 ## Objective
 Make your way to the end of the maze as fast as possible. You may pick up objectives on your way. Finishing the level earlier will yield a higher score multiplier.
 
@@ -40,7 +42,7 @@ npm start
 ### dev-server
   `npm run dev-server`
 
-  Start the webpack dev server and watch for any file changes. This will open your default browser to `https://js13k.localtunnel.me/`.
+  Start the webpack dev server and watch for any file changes. This will open your default browser to localtunnel url for additional mobile usage `https://<random-random-random>.localtunnel.me/`.
 
 ### lint
   `npm run lint` 
@@ -60,7 +62,7 @@ npm start
 ### start
   `npm start`
 
-  Start localtunnel and start the webpack dev server and watch for any file changes. This will open your default browser to `https://js13k.localtunnel.me/`.
+  Start localtunnel and start the webpack dev server and watch for any file changes. This will open your default browser to a localtunnel url for additional mobile usage `https://<random-random-random>.localtunnel.me/`.
 
 ### build
   `npm run build`
@@ -70,9 +72,4 @@ npm start
 ### mobile
   `npm run mobile`
 
-  Start localtunnel for development.
-
-## Contact
-  - Zack Urben
-    - Twitter: https://twitter.com/zackurben (better)
-    - Contact: zackurben@gmail.com
+  Start localtunnel for mobile development.
