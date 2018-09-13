@@ -18,7 +18,7 @@ module.exports = {
     }),
     new copy([
       {
-        from: 't.midi',
+        from: 't.json',
         to: path.resolve(__dirname, 'dist')
       }
     ])

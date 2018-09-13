@@ -103,6 +103,7 @@ function start() {
   // The time in ms since the last frame.
   let delta = 0;
 
+  ctx.audio.music();
   ctx.level.load(1, ctx);
 
   /**
