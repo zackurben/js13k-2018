@@ -4,6 +4,8 @@ In Network Hell, you play the role of a request traveling back up the [OSI Stack
 
 This is a submission for [JS13kGames](https://js13kgames.com/)!
 
+![](/pictures/large.png)
+
 ## Objective
 Make your way to the end of the maze as fast as possible. You may pick up objectives on your way. Finishing the level earlier will yield a higher score multiplier.
 
