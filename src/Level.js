@@ -29,7 +29,7 @@ export default class Level {
 
     ctx.dataDisplay.updateDisplayNode('level', this.level);
     ctx.dataDisplay.updateDisplayNode('score', this.score);
-    ctx.dataDisplay.updateDisplayNode('time', this.time);
+    ctx.dataDisplay.updateDisplayNode('time', parseInt(this.time));
   }
 
   /**
@@ -41,12 +41,22 @@ export default class Level {
    *   The game context object
    */
   update(delta, ctx) {
-    let now = new Date().getTime() / 1000;
-    this.time = parseInt(now - this.startTime);
+    if (isNaN(delta)) {
+      return;
+    }
+
+    this.time += delta / 1000;
   }
 
   load(id, ctx) {
     setTimeout(() => {
+      // Don't reload the first level after finishing the game.
+      if (this.level === 7 && id === 1) {
+        ctx.pause();
+        ctx.dataDisplay.showEndSplash(this.score, parseInt(this.time));
+        return;
+      }
+
       this.level = id;
       this.entities = [].concat(levels[this.level].w, levels[this.level].o);
 
