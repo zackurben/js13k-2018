@@ -70,7 +70,8 @@ export default class Level {
           y: start.y + parseInt((start.height - ctx.player.height) / 2)
         };
 
-        ctx.player.move(ctx, origin);
+        ctx.player.x = origin.x;
+        ctx.player.y = origin.y;
         ctx.audio.load();
       }
     });
