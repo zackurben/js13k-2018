@@ -18,7 +18,7 @@ export default class Input {
    * @param {Object} gameContext The game context object.
    */
   update(delta, context) {
-    if (context.level.time < 1) {
+    if (context.level.time < 0) {
       return;
     }
 

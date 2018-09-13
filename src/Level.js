@@ -13,7 +13,7 @@ export default class Level {
     this.score = 0;
 
     this.startTime = 0;
-    this.time = 0;
+    this.time = -1;
   }
 
   /**
@@ -29,7 +29,7 @@ export default class Level {
 
     ctx.dataDisplay.updateDisplayNode('level', this.level);
     ctx.dataDisplay.updateDisplayNode('score', this.score);
-    ctx.dataDisplay.updateDisplayNode('time', parseInt(this.time));
+    ctx.dataDisplay.updateDisplayNode('time', parseInt(Math.max(0, this.time)));
   }
 
   /**
