@@ -18,6 +18,10 @@ export default class Input {
    * @param {Object} gameContext The game context object.
    */
   update(delta, context) {
+    if (context.level.time < 1) {
+      return;
+    }
+
     context.player.move(
       context,
       this._getUpdatedPlayerPosition(delta, context)
