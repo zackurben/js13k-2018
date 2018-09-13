@@ -61,6 +61,7 @@ export default class Level {
         };
 
         ctx.player.move(ctx, origin);
+        ctx.audio.load();
       }
     });
 
