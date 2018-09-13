@@ -96,7 +96,7 @@ export default class Input {
     };
 
     // Disable player input if the map editor is enabled.
-    if (mapEditor.editor) return playerPosition;
+    if (mapEditor && mapEditor.editor) return playerPosition;
 
     const inputState = this._getInputState();
 
