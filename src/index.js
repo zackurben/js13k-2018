@@ -10,16 +10,32 @@ import Level from './Level';
 import DataDisplay from './data/data-display';
 import Color from './color/color';
 
+const globalState = {
+  paused: false
+};
+
 if (window.localStorage.getItem('skip-splash')) {
   start();
 }
 
-document.getElementById('start-button').addEventListener('click', start);
+document.getElementById('start-button').addEventListener('click', () => {
+  if (globalState.paused) {
+    unPause();
+    return;
+  }
+
+  start();
+});
+
+document.getElementById('pause-button').addEventListener('click', pause);
+window.addEventListener('keypress', event => {
+  if (event.keyCode === 32 || event.which === 32) {
+    pause();
+  }
+});
 
 function start() {
-  // Hide the splash screen and show the game.
-  document.getElementById('splash').classList.add('hidden');
-  document.getElementById('game').classList.remove('hidden');
+  unPause();
 
   let MapEditor = undefined;
   let Crusher = undefined;
@@ -84,7 +100,8 @@ function start() {
     Config,
     level: new Level(),
     dataDisplay: new DataDisplay(getDataDisplayMap()),
-    color: new Color()
+    color: new Color(),
+    pause
   };
 
   // The list of enumerated entities in the game.
@@ -113,6 +130,12 @@ function start() {
     // Calculate the ms delta from the last game tick.
     delta = timestamp - start;
     start = timestamp;
+
+    // Don't update if the game is paused.
+    if (globalState.paused) {
+      window.requestAnimationFrame(update);
+      return;
+    }
 
     // Clear the entire canvas.
     ctx.canvas.clearRect(0, 0, Config.width, Config.height);
@@ -162,4 +185,20 @@ function start() {
 
     canvas2dContext.scale(scalingFactor, scalingFactor);
   }
+}
+
+function pause() {
+  // Show the splash screen and hide the game.
+  document.getElementById('splash').classList.remove('hidden');
+  document.getElementById('game').classList.add('hidden');
+
+  globalState.paused = true;
+}
+
+function unPause() {
+  // Hide the splash screen and show the game.
+  document.getElementById('splash').classList.add('hidden');
+  document.getElementById('game').classList.remove('hidden');
+
+  globalState.paused = false;
 }
